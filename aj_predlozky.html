@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepositions of Place: Prague</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .text-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1.1em;
+        }
+        select {
+            font-size: 1em;
+            padding: 2px 5px;
+            margin: 0 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 1.2em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 30px;
+        }
+        .feedback-item {
+            background-color: #fff;
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .feedback-item strong {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Prepositions of Place: Prague</h1>
+
+    <div class="text-container">
+        Hi! My name is Tom. I live 
+        <select id="q1"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        Prague, a historic city 
+        <select id="q2"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the Czech Republic. <br><br>
+        
+        My family lives 
+        <select id="q3"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        45 Vinohradská Street. My grandmother lives nearby, 
+        <select id="q4"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        Vinohradská Street too, but I don't know her exact house number. <br><br>
+        
+        I go to a school 
+        <select id="q5"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the city centre. My classroom is 
+        <select id="q6"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the third floor. I usually travel to school 
+        <select id="q7"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the tram, but when it rains, my mum takes me 
+        <select id="q8"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        her car. I always wait for her 
+        <select id="q9"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the bus stop near our house. <br><br>
+        
+        There is so much to see here! Tourists love walking 
+        <select id="q10"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        Charles Bridge and relaxing 
+        <select id="q11"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        Letná Park. When friends visit, we usually meet 
+        <select id="q12"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the National Theatre. Then we go inside and watch a play 
+        <select id="q13"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the theatre. <br><br>
+        
+        At the weekend, you can see lots of boats 
+        <select id="q14"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the river Vltava. Sometimes we have lunch 
+        <select id="q15"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        a small restaurant 
+        <select id="q16"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        Old Town Square. Yesterday, I sat 
+        <select id="q17"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        a table outside and left my phone 
+        <select id="q18"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        a chair. <br><br>
+        
+        Prague is beautiful, whether you are standing 
+        <select id="q19"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the top of Petřín Tower or exploring the little shops 
+        <select id="q20"><option value="">---</option><option value="at">at</option><option value="on">on</option><option value="in">in</option></select> 
+        the Old Town.
+    </div>
+
+    <button onclick="evaluateQuiz()">Vyhodnotit</button>
+
+    <div id="results"></div>
+
+    <script>
+        const answersData = {
+            q1: { 
+                correct: "in", 
+                context: "Prague",
+                feedback: {
+                    at: "'At' se používá pro specifické budovy nebo body (např. at the station). Pro celá města používáme vždy 'in' (jako 3D prostor/ohraničené území).",
+                    on: "'On' označuje povrch (on the table). Město není povrch, je to území, proto musí být 'in'."
+                }
+            },
+            q2: { 
+                correct: "in", 
+                context: "the Czech Republic",
+                feedback: {
+                    at: "'At' označuje konkrétní bod setkání. Pro státy a země používáme 'in'.",
+                    on: "'On' je pro povrchy. Stát je geograficky ohraničený prostor, proto 'in'."
+                }
+            },
+            q3: { 
+                correct: "at", 
+                context: "45 Vinohradská Street",
+                feedback: {
+                    in: "'In' se pro adresy nepoužívá (leda pro celá města/státy). Protože je zde konkrétní číslo domu (45), jedná se o přesný bod na mapě, proto použijeme 'at'.",
+                    on: "Zvolil jsi 'on'. Kdyby tam nebyla číslice 45, bylo by to správně (on Vinohradská Street). S číslem popisným jde o konkrétní bod, takže 'at'."
+                }
+            },
+            q4: { 
+                correct: "on", 
+                context: "Vinohradská Street",
+                feedback: {
+                    at: "'At' by vyžadovalo přesné číslo popisné (např. at 10 Baker Street). Pokud uvádíme jen název ulice, v angličtině jsme na jejím 'povrchu', tedy 'on'.",
+                    in: "V češtině sice říkáme 'v ulici', ale v angličtině se pro ulice používá 'on' (představ si ji jako linii/povrch)."
+                }
+            },
+            q5: { 
+                correct: "in", 
+                context: "the city centre",
+                feedback: {
+                    at: "'At' je konkrétní bod. Centrum města je rozlehlá ohraničená oblast, proto se používá 'in'.",
+                    on: "'On' je pro povrchy. Centrum města není povrch, ale oblast (in the centre)."
+                }
+            },
+            q6: { 
+                correct: "on", 
+                context: "the third floor",
+                feedback: {
+                    at: "'At' se nepojí s patry budov. Patro je plocha/povrch, po které chodíme, proto vždy 'on the floor'.",
+                    in: "Nejsme 'uvnitř' patra, ale stojíme na jeho podlaze. Pro patra se používá plošné 'on'."
+                }
+            },
+            q7: { 
+                correct: "on", 
+                context: "the tram",
+                feedback: {
+                    at: "'At' by znamenalo 'u tramvaje' (vedle ní). My jsme v ní. Pro hromadnou dopravu (tramvaj, vlak, autobus) používáme 'on'.",
+                    in: "'In' se používá pro malá vozidla, kde se nedá postavit (in a car, in a taxi). V tramvaji můžeš stát a chodit, proto 'on the tram'."
+                }
+            },
+            q8: { 
+                correct: "in", 
+                context: "her car",
+                feedback: {
+                    at: "'At' the car by znamenalo, že stojíš venku 'u auta'. Zde do něj nastupuje, proto 'in'.",
+                    on: "'On the car' by znamenalo, že jedeš na střeše auta! Pro osobní auta a taxíky se používá 'in'."
+                }
+            },
+            q9: { 
+                correct: "at", 
+                context: "the bus stop",
+                feedback: {
+                    on: "'On the bus stop' by znamenalo, že sedíš na střeše zastávky. Zastávka je orientační bod, proto 'at'.",
+                    in: "'In' by znamenalo, že jsi zavřený uvnitř nějaké budovy. Zastávka je specifický bod v prostoru (at the bus stop, at the traffic lights)."
+                }
+            },
+            q10: { 
+                correct: "on", 
+                context: "Charles Bridge",
+                feedback: {
+                    at: "'At' je bod. Most je dlouhá plocha/linie, po které se procházíš, takže 'on' (jako na ulici).",
+                    in: "Nejsi zabetonovaný 'uvnitř' mostu. Procházíš se po jeho povrchu, proto 'on'."
+                }
+            },
+            q11: { 
+                correct: "in", 
+                context: "Letná Park",
+                feedback: {
+                    at: "'At' the park lze výjimečně použít, pokud je park jen orientační bod setkání na mapě. Pokud ale mluvíme o relaxaci uvnitř jeho prostoru, používáme 'in'.",
+                    on: "V angličtině jsme 'uvnitř' parku (je ohraničený stromy a ploty), nikoliv na jeho povrchu. Proto 'in'."
+                }
+            },
+            q12: { 
+                correct: "at", 
+                context: "the National Theatre (meeting)",
+                feedback: {
+                    in: "Kdybys zvolil 'in', znamenalo by to, že se potkají rovnou uvnitř budovy. Z textu ale vyplývá, že se sejdou 'u' divadla a teprve pak jdou dovnitř (go inside). Proto 'at' (orientační bod).",
+                    on: "'On the theatre' by znamenalo, že si dají sraz na střeše divadla."
+                }
+            },
+            q13: { 
+                correct: "in", 
+                context: "the theatre (watching a play)",
+                feedback: {
+                    at: "Zde už nečekáme venku u divadla (to by bylo 'at'). Text říká 'go inside' a sledují hru uvnitř fyzického prostoru budovy, proto 'in'.",
+                    on: "Hru nesledují na střeše divadla. 'On' se pro budovy používá jen ve smyslu střechy."
+                }
+            },
+            q14: { 
+                correct: "on", 
+                context: "the river",
+                feedback: {
+                    at: "'At the river' by znamenalo 'u řeky' (na břehu). Lodě ale plují po její hladině, proto 'on'.",
+                    in: "'In the river' by znamenalo, že lodě jsou potopené pod vodou. Plují po povrchu (hladině), takže 'on'."
+                }
+            },
+            q15: { 
+                correct: "in", 
+                context: "a small restaurant",
+                feedback: {
+                    at: "'At' a restaurant by bylo uznatelné, pokud by to byl jen bod na trase. Zde ale zdůrazňujeme fyzický pobyt uvnitř podniku, a navíc to tvoří dobrý kontrast s venkovním náměstím (on the square), proto je zde lepší 'in'.",
+                    on: "'On' by znamenalo obědvat na střeše restaurace."
+                }
+            },
+            q16: { 
+                correct: "in", 
+                context: "Old Town Square",
+                feedback: {
+                    at: "'At' se pro náměstí nepoužívá, nejde o malý bod, ale o velký prostor.",
+                    on: "'On the square' používá americká angličtina, ale v britské angličtině a pro evropská ohraničená náměstí používáme 'in the square' (jsme obklopeni budovami)."
+                }
+            },
+            q17: { 
+                correct: "at", 
+                context: "a table",
+                feedback: {
+                    in: "Nemůžeš sedět 'uvnitř' stolu. Stůl je kus nábytku.",
+                    on: "'On a table' by znamenalo, že jsi vylezl nahoru a sedíš fyzicky na desce stolu. Pokud sedíš 'u' stolu (abys jedl), používáme vždy 'at'."
+                }
+            },
+            q18: { 
+                correct: "on", 
+                context: "a chair",
+                feedback: {
+                    at: "'At a chair' by znamenalo, že stojíš vedle židle. Telefon leží na ní.",
+                    in: "Telefon není zabudovaný uvnitř židle. Leží na jejím povrchu, proto 'on'."
+                }
+            },
+            q19: { 
+                correct: "at", 
+                context: "the top of...",
+                feedback: {
+                    in: "Vrchol věže není ohraničený 3D prostor. Je to specifický bod, proto 'at the top / at the bottom'.",
+                    on: "Ačkoliv stojíš na povrchu, fráze 'top of' a 'bottom of' (specifické okraje/body) se vždy pojí s předložkou 'at'."
+                }
+            },
+            q20: { 
+                correct: "in", 
+                context: "the Old Town",
+                feedback: {
+                    at: "'At' je jen pro adresy nebo malé orientační body. Staré Město je velká čtvrť.",
+                    on: "'On' je pro povrchy a ulice. Čtvrtě, stejně jako města a státy, tvoří ohraničené území, takže používáme 'in'."
+                }
+            }
+        };
+
+        function evaluateQuiz() {
+            let resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; 
+            let mistakes = 0;
+
+            for (let i = 1; i <= 20; i++) {
+                let qId = 'q' + i;
+                let select = document.getElementById(qId);
+                let userAnswer = select.value;
+                let data = answersData[qId];
+
+                // Reset styles
+                select.classList.remove('correct', 'incorrect');
+
+                if (userAnswer === "") {
+                    mistakes++;
+                    continue; // Skip empty answers, or you could add a warning
+                }
+
+                if (userAnswer === data.correct) {
+                    select.classList.add('correct');
+                } else {
+                    select.classList.add('incorrect');
+                    mistakes++;
+                    
+                    // Generate feedback
+                    let feedbackHtml = `
+                        <div class="feedback-item">
+                            <strong>Chyba u čísla ${i} (...${data.context}):</strong><br>
+                            Zvolil jsi <em>'${userAnswer}'</em>. ${data.feedback[userAnswer]}<br>
+                            Správná odpověď je <strong>'${data.correct}'</strong>.
+                        </div>
+                    `;
+                    resultsDiv.innerHTML += feedbackHtml;
+                }
+            }
+
+            if (mistakes === 0) {
+                let allSelectsFilled = true;
+                for (let i = 1; i <= 20; i++) {
+                    if (document.getElementById('q' + i).value === "") allSelectsFilled = false;
+                }
+                
+                if (allSelectsFilled) {
+                    resultsDiv.innerHTML = `<h2 style="color: #28a745;">Výborně! Všechno máš správně.</h2>`;
+                } else {
+                    resultsDiv.innerHTML = `<h2 style="color: #dc3545;">Prosím, vyplň všechna pole.</h2>`;
+                }
+            } else {
+                resultsDiv.insertAdjacentHTML('afterbegin', `<h2 style="color: #dc3545;">Máš tam několik chyb. Podívej se na vysvětlení níže:</h2>`);
+            }
+        }
+    </script>
+</body>
+</html>
