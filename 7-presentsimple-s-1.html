@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivita 1 - The Active Family</title>
+    <style>
+        body {
+            font-family: "Comic Sans MS", "Arial", sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            background-color: #f0f8ff;
+            color: #333;
+            max-width: 850px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 8px solid #ffb347;
+        }
+        h1 {
+            color: #ff8c00;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background-color: #fffacd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px dashed #ffb347;
+        }
+        .instructions strong {
+            color: #d35400;
+        }
+        select {
+            font-size: 18px;
+            padding: 5px;
+            margin: 0 5px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            background-color: #fdfefe;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .item-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+        }
+        .sentence {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .translation {
+            font-size: 15px;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 4px;
+        }
+        .feedback {
+            display: block;
+            font-size: 16px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .correct-text { color: #27ae60; }
+        .wrong-text { color: #c0392b; }
+        .correct-select { border-color: #27ae60; background-color: #eafaf1; }
+        .wrong-select { border-color: #c0392b; background-color: #fdedec; }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌟 The Active Family 🌟</h1>
+    
+    <div class="instructions">
+        <strong>Pravidlo pro přítomný čas:</strong><br>
+        🧑‍🤝‍🧑 I, you, we, they (a množné číslo) ➔ <strong>základní tvar</strong> (např. play)<br>
+        👤 He, she, it (jeden člověk, zvíře, věc) ➔ <strong>přidáme -s nebo -es</strong> (např. plays)
+    </div>
+
+    <div id="questions">
+        <!-- Zde se generují otázky přes JavaScript -->
+    </div>
+
+    <button onclick="checkAnswers()">Zkontrolovat odpovědi ✔️</button>
+</div>
+
+<script>
+    const quizData = [
+        { id: "q1", emoji: "🦷", start: "1. I ", end: " my teeth in the morning.", options: ["brush", "brushes"], correct: "brush", trans: "Ráno si čistím zuby.", rule: "U zájmena 'I' (já) se používá základní tvar bez -s." },
+        { id: "q2", emoji: "🚗", start: "2. My dad ", end: " to work by car.", options: ["go", "goes"], correct: "goes", trans: "Můj táta jezdí do práce autem.", rule: "Chyba. 'My dad' (můj táta) je jako zájmeno 'he' (on). Musíme přidat -es." },
+        { id: "q3", emoji: "🎧", start: "3. My friends ", end: " to music after school.", options: ["listen", "listens"], correct: "listen", trans: "Moji kamarádi poslouchají po škole hudbu.", rule: "Chyba. 'My friends' (kamarádi) je množné číslo, jako 'they' (oni). Použije se základní tvar." },
+        { id: "q4", emoji: "🐶", start: "4. Our dog ", end: " on the sofa.", options: ["sleep", "sleeps"], correct: "sleeps", trans: "Náš pes spí na gauči.", rule: "Chyba. 'Our dog' (náš pes) je zvíře, zastupuje ho 'it' (to). Musíme přidat -s." },
+        { id: "q5", emoji: "🏠", start: "5. We ", end: " in a big house.", options: ["live", "lives"], correct: "live", trans: "Bydlíme ve velkém domě.", rule: "Chyba. U zájmena 'we' (my) se používá základní tvar bez -s." },
+        { id: "q6", emoji: "📚", start: "6. She ", end: " her homework in the evening.", options: ["do", "does"], correct: "does", trans: "Ona si dělá úkoly večer.", rule: "Chyba. U zájmena 'she' (ona) musíme přidat -es (sloveso do -> does)." },
+        { id: "q7", emoji: "⚽", start: "7. Peter ", end: " football on Fridays.", options: ["play", "plays"], correct: "plays", trans: "Petr hraje v pátek fotbal.", rule: "Chyba. 'Peter' je jako zájmeno 'he' (on). Musíme přidat -s." },
+        { id: "q8", emoji: "⏰", start: "8. You ", end: " up very early.", options: ["get", "gets"], correct: "get", trans: "Ty vstáváš velmi brzy.", rule: "Chyba. U zájmena 'you' (ty/vy) se používá základní tvar bez -s." },
+        { id: "q9", emoji: "📺", start: "9. My sister ", end: " TV after dinner.", options: ["watch", "watches"], correct: "watches", trans: "Moje sestra se po večeři dívá na televizi.", rule: "Chyba. 'My sister' (moje sestra) je jako 'she' (ona). Musíme přidat -es." },
+        { id: "q10", emoji: "🥞", start: "10. They ", end: " breakfast at 7 o'clock.", options: ["have", "has"], correct: "have", trans: "Oni snídají v 7 hodin.", rule: "Chyba. U zájmena 'they' (oni) se používá základní tvar 'have'." },
+        { id: "q11", emoji: "🥛", start: "11. The cat ", end: " milk every day.", options: ["drink", "drinks"], correct: "drinks", trans: "Ta kočka pije mléko každý den.", rule: "Chyba. 'The cat' (kočka) je zvíře ('it'). Musíme přidat -s." },
+        { id: "q12", emoji: "👵", start: "12. My grandparents ", end: " us on Sunday.", options: ["visit", "visits"], correct: "visit", trans: "Moji prarodiče nás navštěvují v neděli.", rule: "Chyba. 'My grandparents' je množné číslo ('they'). Použije se základní tvar." }
+    ];
+
+    const questionsContainer = document.getElementById("questions");
+
+    quizData.forEach(q => {
+        let optionsHTML = `<option value="">---</option>`;
+        q.options.forEach(opt => {
+            optionsHTML += `<option value="${opt}">${opt}</option>`;
+        });
+
+        questionsContainer.innerHTML += `
+            <div class="item-box">
+                <div class="sentence">${q.emoji} ${q.start} 
+                    <select id="${q.id}">
+                        ${optionsHTML}
+                    </select> 
+                ${q.end}</div>
+                <div class="translation">${q.trans}</div>
+                <span id="fb-${q.id}" class="feedback"></span>
+            </div>
+        `;
+    });
+
+    function checkAnswers() {
+        quizData.forEach(q => {
+            let selectElement = document.getElementById(q.id);
+            let feedbackElement = document.getElementById("fb-" + q.id);
+            let userAnswer = selectElement.value;
+
+            // Reset stylů
+            selectElement.className = "";
+            feedbackElement.className = "feedback";
+            feedbackElement.innerText = "";
+
+            if (userAnswer === "") {
+                feedbackElement.innerText = "Nevybral jsi žádnou možnost.";
+                feedbackElement.classList.add("wrong-text");
+                selectElement.classList.add("wrong-select");
+            } else if (userAnswer === q.correct) {
+                feedbackElement.innerText = "Správně!";
+                feedbackElement.classList.add("correct-text");
+                selectElement.classList.add("correct-select");
+            } else {
+                feedbackElement.innerText = q.rule;
+                feedbackElement.classList.add("wrong-text");
+                selectElement.classList.add("wrong-select");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

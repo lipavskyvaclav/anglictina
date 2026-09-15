@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivity 2 a 3 - Present Simple</title>
+    <style>
+        body {
+            font-family: Verdana, Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .instructions {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        .item-box {
+            background-color: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+        .sentence {
+            font-weight: bold;
+            color: #2c3e50;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .hint {
+            color: #d35400;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        input[type="text"] {
+            font-size: 18px;
+            padding: 5px 10px;
+            width: 120px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-family: inherit;
+            text-align: center;
+        }
+        .translation {
+            font-size: 15px;
+            color: #666;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        .feedback {
+            display: block;
+            font-size: 15px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .correct-text { color: #27ae60; }
+        .wrong-text { color: #c0392b; }
+        .correct-input { border-color: #27ae60 !important; background-color: #eafaf1; }
+        .wrong-input { border-color: #c0392b !important; background-color: #fdedec; }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<!-- AKTIVITA 2 -->
+<div class="container">
+    <h2>Aktivita 2: Doplň správný tvar</h2>
+    <div class="instructions">
+        <strong>Úkol:</strong> V závorce máš napovězené sloveso. Napiš do rámečku jeho správný tvar podle toho, o kom věta mluví.<br>
+        <em>Pamatuj: U he, she, it (nebo u jména jednoho člověka) přidáváme -s nebo -es.</em>
+    </div>
+    <div id="act2-questions"></div>
+    <button onclick="checkAct2()">Zkontrolovat Aktivitu 2</button>
+</div>
+
+<!-- AKTIVITA 3 -->
+<div class="container">
+    <h2>Aktivita 3: Které sloveso tam patří?</h2>
+    <div class="instructions">
+        <strong>Úkol:</strong> Zde už nemáš anglickou nápovědu. Přečti si český překlad, vzpomeň si na správné anglické sloveso z učebnice a napiš ho ve správném tvaru.
+    </div>
+    <div id="act3-questions"></div>
+    <button onclick="checkAct3()">Zkontrolovat Aktivitu 3</button>
+</div>
+
+<script>
+    // DATA PRO AKTIVITU 2
+    const dataAct2 = [
+        { id: "a2q1", hint: "(work)", start: "My mum", end: "in a hospital.", correct: "works", trans: "Moje máma pracuje v nemocnici.", rule: "'My mum' je jako 'she' (ona), musíš přidat -s." },
+        { id: "a2q2", hint: "(have)", start: "We", end: "lunch at school.", correct: "have", trans: "My obědváme ve škole.", rule: "U 'we' (my) zůstává sloveso v základním tvaru." },
+        { id: "a2q3", hint: "(finish)", start: "The film", end: "at 8 PM.", correct: "finishes", trans: "Ten film končí v 8 večer.", rule: "'The film' je věc ('it'). Sloveso končí na -sh, musíš přidat -es." },
+        { id: "a2q4", hint: "(go)", start: "My brother", end: "to the cinema on Fridays.", correct: "goes", trans: "Můj bratr chodí v pátek do kina.", rule: "'My brother' je jako 'he' (on). Sloveso končí na -o, přidáváme -es." },
+        { id: "a2q5", hint: "(meet)", start: "He", end: "his friends in the park.", correct: "meets", trans: "On se potkává s kamarády v parku.", rule: "U 'he' (on) se přidává -s k základnímu tvaru." },
+        { id: "a2q6", hint: "(play)", start: "Kate", end: "the piano.", correct: "plays", trans: "Kate hraje na klavír.", rule: "'Kate' je jako 'she' (ona), musíš přidat -s." },
+        { id: "a2q7", hint: "(relax)", start: "I", end: "at the weekend.", correct: "relax", trans: "O víkendu odpočívám.", rule: "U 'I' (já) zůstává sloveso v základním tvaru." },
+        { id: "a2q8", hint: "(start)", start: "Our lessons", end: "at 8 o'clock.", correct: "start", trans: "Naše hodiny začínají v 8 hodin.", rule: "'Our lessons' je množné číslo ('they'). Zůstává základní tvar." }
+    ];
+
+    // DATA PRO AKTIVITU 3
+    const dataAct3 = [
+        { id: "a3q1", start: "I", end: "my teeth every morning.", correct: "brush", trans: "Každé ráno si čistím zuby.", rule: "Základní sloveso je 'brush'. U 'I' (já) se nepřidává -s." },
+        { id: "a3q2", start: "She", end: "in a small house.", correct: "lives", trans: "Ona bydlí v malém domě.", rule: "Sloveso pro bydlet je 'live'. U 'she' musíš přidat -s." },
+        { id: "a3q3", start: "We", end: "our homework before dinner.", correct: "do", trans: "Děláme si domácí úkol před večeří.", rule: "Sloveso pro dělat (úkoly) je 'do'. U 'we' (my) se nepřidává -s." },
+        { id: "a3q4", start: "My dad", end: "up early on Sundays.", correct: "gets", trans: "Můj táta vstává v neděli brzy.", rule: "Sloveso pro vstávat je 'get (up)'. 'My dad' je 'he', musíš přidat -s." },
+        { id: "a3q5", start: "My sister", end: "to a dance academy.", correct: "goes", trans: "Moje sestra chodí do taneční akademie.", rule: "Sloveso pro jít/chodit je 'go'. 'My sister' je 'she' (ona), proto přidáváme -es." },
+        { id: "a3q6", start: "Our dog", end: "on the floor.", correct: "sleeps", trans: "Náš pes spí na podlaze.", rule: "Sloveso pro spát je 'sleep'. Pes je zvíře ('it'), musíš přidat -s." },
+        { id: "a3q7", start: "I", end: "English with my friends.", correct: "speak", trans: "Mluvím anglicky se svými kamarády.", rule: "Sloveso pro mluvit je 'speak'. U 'I' se nepřidává -s." },
+        { id: "a3q8", start: "He", end: "photos with his mobile.", correct: "takes", trans: "On fotí (dělá fotky) svým mobilem.", rule: "Fráze pro focení je 'take (photos)'. U 'he' musíš přidat -s." }
+    ];
+
+    // VYKRESLENÍ AKTIVIT
+    function renderActivity(data, containerId, hasHint) {
+        const container = document.getElementById(containerId);
+        data.forEach((q, index) => {
+            let hintHTML = hasHint ? `<span class="hint">${q.hint}</span>` : "";
+            container.innerHTML += `
+                <div class="item-box">
+                    <div class="sentence">
+                        ${index + 1}. ${hintHTML} ${q.start} 
+                        <input type="text" id="${q.id}" autocomplete="off"> 
+                        ${q.end}
+                    </div>
+                    <div class="translation">${q.trans}</div>
+                    <span id="fb-${q.id}" class="feedback"></span>
+                </div>
+            `;
+        });
+    }
+
+    renderActivity(dataAct2, "act2-questions", true);
+    renderActivity(dataAct3, "act3-questions", false);
+
+    // KONTROLA ODPOVĚDÍ
+    function checkAnswers(data) {
+        data.forEach(q => {
+            let inputElement = document.getElementById(q.id);
+            let feedbackElement = document.getElementById("fb-" + q.id);
+            let userAnswer = inputElement.value.trim().toLowerCase();
+
+            inputElement.classList.remove("correct-input", "wrong-input");
+            feedbackElement.className = "feedback";
+            
+            if (userAnswer === "") {
+                feedbackElement.innerText = "Nevyplnil jsi rámeček.";
+                feedbackElement.classList.add("wrong-text");
+                inputElement.classList.add("wrong-input");
+            } else if (userAnswer === q.correct) {
+                feedbackElement.innerText = "Správně!";
+                feedbackElement.classList.add("correct-text");
+                inputElement.classList.add("correct-input");
+            } else {
+                feedbackElement.innerText = `Chyba. ${q.rule} Správná odpověď je: ${q.correct}`;
+                feedbackElement.classList.add("wrong-text");
+                inputElement.classList.add("wrong-input");
+            }
+        });
+    }
+
+    function checkAct2() { checkAnswers(dataAct2); }
+    function checkAct3() { checkAnswers(dataAct3); }
+</script>
+
+</body>
+</html>
