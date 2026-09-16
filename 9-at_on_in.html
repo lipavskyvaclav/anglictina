@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procvičování předložek: at / on / in</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .row:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+        .col-cz {
+            flex: 1;
+            font-weight: bold;
+        }
+        .col-en {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        select {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn-evaluate {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-evaluate:hover {
+            background-color: #004494;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback {
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: #d32f2f;
+            display: none;
+            width: 100%;
+        }
+        .row-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .correct-bg {
+            background-color: #e8f5e9 !important;
+        }
+        .wrong-bg {
+            background-color: #ffebee !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Doplňte správnou předložku (at / on / in)</h1>
+    <p>Podle českého překladu vyberte správnou anglickou předložku. U některých výrazů existuje více správných možností v závislosti na kontextu.</p>
+    
+    <div id="exercise"></div>
+
+    <button class="btn-evaluate" onclick="evaluateExercise()">Vyhodnotit cvičení</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    // Definice dat: CZ překlad, EN slovíčko, správné předložky (pole), vysvětlení chyby
+    const quizData = [
+        { cz: "na venkově", en: "the countryside", correct: ["in"], explanation: "V angličtině chápeme venkov jako oblast/území, proto používáme 'in'. Nenechte se zmást českým 'na'." },
+        { cz: "na poušti", en: "the desert", correct: ["in"], explanation: "Podobně jako u venkova, poušť je velká oblast, používáme 'in'." },
+        { cz: "na poli", en: "the field", correct: ["in"], explanation: "Pole je v angličtině vnímáno jako ohraničený prostor, proto se používá 'in' (in the field)." },
+        { cz: "na ostrově", en: "the island", correct: ["on"], explanation: "U ostrovů se standardně používá 'on' (nacházíte se na povrchu ostrova)." },
+        { cz: "v přístavu", en: "the harbour", correct: ["at", "in"], explanation: "Lze uznat obojí. 'At' chápeme jako bod na mapě/místo určení, 'in' jako fyzické ohraničené místo uvnitř areálu." },
+        { cz: "u jezera", en: "the lake", correct: ["at"], explanation: "Když jsme 'u' nějaké vodní plochy (ve smyslu vedle ní, poblíž), používáme 'at'." },
+        { cz: "v řece", en: "the river", correct: ["in"], explanation: "Pokud jsme fyzicky ve vodě, používáme 'in'." },
+        { cz: "na pláži", en: "the beach", correct: ["on", "at"], explanation: "Správně je 'on' (na písku) i 'at' (jako lokace u moře)." },
+        { cz: "v jeskyni", en: "the cave", correct: ["in"], explanation: "Jeskyně je uzavřený 3D prostor, patří sem 'in'." },
+        { cz: "na hoře", en: "the mountain", correct: ["on"], explanation: "Při pobytu na konkrétní hoře říkáme 'on the mountain' (na jejím povrchu)." },
+        { cz: "na horách (v pohoří)", en: "the mountains", correct: ["in"], explanation: "Na rozdíl od jedné hory (on), u celého pohoří používáme 'in' (jako oblast)." },
+        { cz: "na dálnici", en: "the motorway", correct: ["on"], explanation: "Silnice, dálnice a cesty představují povrchy a linky, proto se pojí s 'on'." },
+        { cz: "v elektrárně", en: "the power station", correct: ["at", "in"], explanation: "Jako instituce nebo bod na mapě použijeme 'at', pokud zdůrazňujeme fyzický pobyt uvnitř budovy, lze použít i 'in'." },
+        { cz: "v letadle", en: "a plane", correct: ["on"], explanation: "U větších hromadných dopravních prostředků, kde se můžeme postavit a projít (letadlo, vlak, autobus, loď), se navzdory češtině používá 'on'." },
+        { cz: "v helikoptéře", en: "a helicopter", correct: ["in"], explanation: "U menších dopravních prostředků, do kterých se musíme nasoukat a nedá se v nich chodit (auto, helikoptéra, taxi), používáme 'in'." },
+        { cz: "ve vlaku", en: "a train", correct: ["on"], explanation: "Vlak je velký dopravní prostředek (lze v něm chodit), proto používáme 'on'." },
+        { cz: "v autě", en: "a car", correct: ["in"], explanation: "Auto je malý dopravní prostředek (nelze v něm chodit), proto 'in'." },
+        { cz: "na stadiónu", en: "the stadium", correct: ["at", "in"], explanation: "Obojí je možné. 'At' označuje událost nebo místo na mapě (jsme na zápase), 'in' zdůrazňuje, že jsme fyzicky uvnitř stavby." },
+        { cz: "v kavárně", en: "a café", correct: ["at", "in"], explanation: "'At' bereme jako veřejné místo či bod setkání, 'in' zdůrazňuje, že sedíme uvnitř budovy, ne na zahrádce." },
+        { cz: "v zábavním parku", en: "a theme park", correct: ["at", "in"], explanation: "Lze uznat 'at' (jako bod, instituce) i 'in' (fyzicky uvnitř areálu)." },
+        { cz: "na Marsu", en: "Mars", correct: ["on"], explanation: "U planet se používá 'on', protože mluvíme o pobytu na jejich povrchu." },
+        { cz: "u věže", en: "the tower", correct: ["at"], explanation: "Předložka 'at' se používá k vyjádření pozice 'u' něčeho, v těsné blízkosti daného bodu." },
+        { cz: "na náměstí", en: "the square", correct: ["in", "on"], explanation: "V britské angličtině se tradičně používá 'in the square', v americké často 'on the square'. Lze uznat obojí." },
+        { cz: "na ulici", en: "the street", correct: ["in", "on"], explanation: "Podobně jako u náměstí: britská angličtina preferuje 'in the street', americká 'on the street'." }
+    ];
+
+    const exerciseDiv = document.getElementById("exercise");
+
+    // Vykreslení formuláře
+    quizData.forEach((item, index) => {
+        const rowHTML = `
+            <div class="row-container" id="row-${index}">
+                <div class="row">
+                    <div class="col-cz">${item.cz}</div>
+                    <div class="col-en">
+                        = 
+                        <select id="select-${index}">
+                            <option value="">--vyberte--</option>
+                            <option value="at">at</option>
+                            <option value="on">on</option>
+                            <option value="in">in</option>
+                        </select>
+                        ${item.en}
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-${index}">
+                    <strong>Chyba:</strong> Správná odpověď je <em>${item.correct.join(' nebo ')}</em>. <br>${item.explanation}
+                </div>
+            </div>
+        `;
+        exerciseDiv.innerHTML += rowHTML;
+    });
+
+    // Funkce pro vyhodnocení
+    function evaluateExercise() {
+        let correctCount = 0;
+        let unanswered = false;
+
+        quizData.forEach((item, index) => {
+            const selectElement = document.getElementById(`select-${index}`);
+            const rowContainer = document.getElementById(`row-${index}`);
+            const feedbackElement = document.getElementById(`feedback-${index}`);
+            const userAnswer = selectElement.value;
+
+            // Reset stylů
+            rowContainer.classList.remove("correct-bg", "wrong-bg");
+            feedbackElement.style.display = "none";
+
+            if (userAnswer === "") {
+                unanswered = true;
+            } else if (item.correct.includes(userAnswer)) {
+                rowContainer.classList.add("correct-bg");
+                correctCount++;
+            } else {
+                rowContainer.classList.add("wrong-bg");
+                feedbackElement.style.display = "block";
+            }
+        });
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.style.display = "block";
+
+        if (unanswered) {
+            resultsDiv.innerHTML = "<h3 style='color: #f57c00;'>Některé položky zůstaly nevyplněné.</h3>";
+            resultsDiv.style.backgroundColor = "#fff3e0";
+        } else {
+            const percentage = Math.round((correctCount / quizData.length) * 100);
+            resultsDiv.innerHTML = `<h3>Výsledek: ${correctCount} z ${quizData.length} správně (${percentage} %).</h3>`;
+            
+            if (percentage === 100) {
+                resultsDiv.style.backgroundColor = "#e8f5e9";
+                resultsDiv.style.color = "#2e7d32";
+            } else {
+                resultsDiv.style.backgroundColor = "#ffebee";
+                resultsDiv.style.color = "#c62828";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
