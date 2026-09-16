@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procvičování časových předložek</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .intro {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            color: #555;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .row-container {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+            border-radius: 4px;
+        }
+        .row-container:nth-child(even) {
+            background-color: #fafafa;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .col-num {
+            width: 40px;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        .col-phrase {
+            flex: 1;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        select {
+            padding: 6px;
+            font-size: 16px;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+        }
+        select:focus {
+            border-color: #3498db;
+        }
+        .btn-evaluate {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-evaluate:hover {
+            background-color: #1c5980;
+        }
+        #results {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 6px;
+            display: none;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .feedback {
+            font-size: 0.95em;
+            margin-top: 8px;
+            padding: 0 10px 0 50px;
+            color: #c0392b;
+            display: none;
+        }
+        .correct-bg {
+            background-color: #e8f8f5 !important;
+        }
+        .wrong-bg {
+            background-color: #fdedec !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Časové předložky: at / on / in / last / ago</h1>
+    <p class="intro">
+        Doplňte do vět chybějící slovo. <br>
+        <strong>Pozor:</strong> Pokud by do fráze gramaticky pasovaly dvě různé možnosti (např. u dnů <em>on</em> i <em>last</em>), v roletce naleznete k výběru pouze jednu z nich.
+    </p>
+    
+    <div id="exercise"></div>
+
+    <button class="btn-evaluate" onclick="evaluateExercise()">Vyhodnotit cvičení</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    // Seznam všech 5 možností
+    const baseOptions = ["at", "on", "in", "last", "ago"];
+
+    const quizData = [
+        { before: "", after: "7:30 am", correct: ["at"], exclude: [], exp: "S konkrétním časovým údajem na hodinách se vždy pojí 'at'." },
+        { before: "", after: "Wednesday", correct: ["on"], exclude: ["last"], exp: "Před dny v týdnu dáváme 'on'. (Možnost 'last' tu byla záměrně skryta)." },
+        { before: "", after: "the evening", correct: ["in"], exclude: ["last"], exp: "S částmi dne (the morning, the afternoon, the evening) se používá 'in'." },
+        { before: "", after: "night", correct: ["at"], exclude: ["last"], exp: "Výjimka! Zatímco u rána či večera říkáme 'in', u noci je ustálená fráze 'at night'." },
+        { before: "", after: "Easter", correct: ["at"], exclude: ["last"], exp: "Pokud mluvíme o celém svátečním období, dáváme 'at'." },
+        { before: "", after: "Christmas Day", correct: ["on"], exclude: ["last"], exp: "Jakmile svátek obsahuje slovo 'Day' (konkrétní den), pravidlo pro dny má přednost a dáváme 'on'." },
+        { before: "three hours", after: "", correct: ["ago"], exclude: [], exp: "Slovo 'ago' (před nějakou dobou) jako jediné z nabídky stojí vždy až ZA časovým údajem (three hours ago)." },
+        { before: "", after: "the weekend", correct: ["at", "on"], exclude: ["last"], exp: "Obojí je správně. V britské angličtině 'at the weekend', v americké 'on the weekend'." },
+        { before: "", after: "2015", correct: ["in"], exclude: ["last"], exp: "S letopočty vždy používáme předložku 'in'." },
+        { before: "", after: "summer", correct: ["in"], exclude: ["last"], exp: "S ročními obdobími (spring, summer, autumn, winter) se pojí 'in'." },
+        { before: "", after: "the 19th century", correct: ["in"], exclude: ["last"], exp: "Pro staletí platí stejné pravidlo jako pro roky – používáme 'in'." },
+        { before: "", after: "Friday night", correct: ["on"], exclude: ["last"], exp: "Jakmile spojení obsahuje konkrétní den v týdnu (Friday), dáváme 'on', i když samotné slovo 'night' by mělo 'at'." },
+        { before: "", after: "week", correct: ["last"], exclude: ["in", "on", "at"], exp: "Slovo 'last' (minulý týden) se už s žádnou další předložkou nepojí. Neříkáme 'in last week'." },
+        { before: "a few days", after: "", correct: ["ago"], exclude: [], exp: "Výraz 'a few days ago' znamená 'před několika dny'. 'Ago' musí být na konci." },
+        { before: "", after: "midnight", correct: ["at"], exclude: ["last"], exp: "Půlnoc (midnight) bereme jako jeden přesný bod v čase, proto dáváme 'at'." },
+        { before: "", after: "my birthday", correct: ["on"], exclude: ["last"], exp: "Narozeniny představují jeden konkrétní den, proto se u nich používá 'on' stejně jako u dnů v týdnu." },
+        { before: "", after: "winter", correct: ["last"], exclude: ["in"], exp: "Zde bylo skryto 'in', takže se hledalo slovo 'last' (minulou zimu)." },
+        { before: "", after: "4th July", correct: ["on"], exclude: ["last"], exp: "U konkrétních dat (čtvrtého července) používáme vždy 'on'." },
+        { before: "", after: "noon", correct: ["at"], exclude: ["last"], exp: "Poledne (noon) funguje jako přesný časový údaj (12:00), proto má 'at'." },
+        { before: "", after: "the past", correct: ["in"], exclude: [], exp: "Ustálené fráze 'in the past' (v minulosti) nebo 'in the future' (v budoucnosti) vyžadují 'in'." },
+        { before: "six months", after: "", correct: ["ago"], exclude: [], exp: "Znamená 'před šesti měsíci'. 'Ago' se píše až za časový úsek." },
+        { before: "", after: "the 1960s", correct: ["in"], exclude: ["last"], exp: "S celými desetiletími (v šedesátých letech) používáme předložku 'in'." },
+        { before: "", after: "holiday", correct: ["on"], exclude: ["last"], exp: "Anglická fráze pro prázdniny a dovolenou je 'on holiday'." },
+        { before: "", after: "Sunday", correct: ["last"], exclude: ["on"], exp: "Všimněte si, že v nabídce chybělo 'on'. Hledaným slovem proto bylo 'last' (minulou neděli)." },
+        { before: "", after: "month", correct: ["last"], exclude: ["in", "on", "at"], exp: "Spojení znamená 'minulý měsíc'. Před 'last' už žádnou předložku nepřidáváme." }
+    ];
+
+    const exerciseDiv = document.getElementById("exercise");
+
+    quizData.forEach((item, index) => {
+        let optionsHTML = `<option value="">--</option>`;
+        baseOptions.forEach(opt => {
+            if (!item.exclude.includes(opt)) {
+                optionsHTML += `<option value="${opt}">${opt}</option>`;
+            }
+        });
+
+        const beforeHTML = item.before ? `<span>${item.before}</span>` : "";
+        const afterHTML = item.after ? `<span>${item.after}</span>` : "";
+        const selectHTML = `<select id="select-${index}">${optionsHTML}</select>`;
+
+        const rowHTML = `
+            <div class="row-container" id="row-${index}">
+                <div class="row">
+                    <div class="col-num">${index + 1}.</div>
+                    <div class="col-phrase">
+                        ${beforeHTML}
+                        ${selectHTML}
+                        ${afterHTML}
+                    </div>
+                </div>
+                <div class="feedback" id="feedback-${index}"></div>
+            </div>
+        `;
+        exerciseDiv.innerHTML += rowHTML;
+    });
+
+    function evaluateExercise() {
+        let correctCount = 0;
+        let unanswered = false;
+
+        quizData.forEach((item, index) => {
+            const selectElement = document.getElementById(`select-${index}`);
+            const rowContainer = document.getElementById(`row-${index}`);
+            const feedbackElement = document.getElementById(`feedback-${index}`);
+            const userAnswer = selectElement.value;
+
+            rowContainer.classList.remove("correct-bg", "wrong-bg");
+            feedbackElement.style.display = "none";
+
+            if (userAnswer === "") {
+                unanswered = true;
+            } else if (item.correct.includes(userAnswer)) {
+                rowContainer.classList.add("correct-bg");
+                correctCount++;
+            } else {
+                rowContainer.classList.add("wrong-bg");
+                feedbackElement.innerHTML = `<strong>Chyba!</strong> Zvolili jste <em>„${userAnswer}“</em>, ale správně je <strong>„${item.correct.join(' nebo ')}“</strong>. <br>${item.exp}`;
+                feedbackElement.style.display = "block";
+            }
+        });
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.style.display = "block";
+
+        if (unanswered) {
+            resultsDiv.innerHTML = "<strong>Některé položky zůstaly nevyplněné. Pro kompletní vyhodnocení je doplňte.</strong>";
+            resultsDiv.style.backgroundColor = "#fff3e0";
+            resultsDiv.style.color = "#e65100";
+        } else {
+            const percentage = Math.round((correctCount / quizData.length) * 100);
+            resultsDiv.innerHTML = `<strong>Váš výsledek: ${correctCount} z ${quizData.length} správně (${percentage} %).</strong>`;
+            
+            if (percentage === 100) {
+                resultsDiv.style.backgroundColor = "#e8f8f5";
+                resultsDiv.style.color = "#1e8449";
+            } else {
+                resultsDiv.style.backgroundColor = "#fdedec";
+                resultsDiv.style.color = "#922b21";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
