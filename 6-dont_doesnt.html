@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zápor v angličtině – don't / doesn't</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EE;
+    --ink:#1F2733;
+    --ink-soft:#5A6472;
+    --accent:#D9502B;
+    --accent-soft:#F4DFD5;
+    --teal:#1F8A82;
+    --teal-soft:#DCEEEC;
+    --good:#2E9C4F;
+    --good-bg:#E4F5E8;
+    --bad:#C9403F;
+    --bad-bg:#FBE6E5;
+    --amber:#B57A16;
+    --amber-bg:#FBF0DA;
+    --border:#E4DCC8;
+    --card:#FFFFFF;
+    --radius:14px;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper:#1B1A17;
+      --ink:#F2EEE3;
+      --ink-soft:#C7C0AE;
+      --card:#26241F;
+      --border:#3A362D;
+      --accent-soft:#4A2A1E;
+      --teal-soft:#173634;
+      --good-bg:#1E3222;
+      --bad-bg:#3A1F1F;
+      --amber-bg:#392C10;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1B1A17;
+    --ink:#F2EEE3;
+    --ink-soft:#C7C0AE;
+    --card:#26241F;
+    --border:#3A362D;
+    --accent-soft:#4A2A1E;
+    --teal-soft:#173634;
+    --good-bg:#1E3222;
+    --bad-bg:#3A1F1F;
+    --amber-bg:#392C10;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Atkinson Hyperlegible', Verdana, Arial, sans-serif;
+    font-size:19px;
+    line-height:1.65;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px;}
+
+  header.page-head{margin-bottom:34px;}
+  header.page-head h1{
+    font-size:clamp(28px,5vw,38px);
+    line-height:1.15;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  header.page-head p{margin:0;color:var(--ink-soft);font-size:18px;}
+
+  .rule-box{
+    background:var(--teal-soft);
+    border:2px solid var(--teal);
+    border-radius:var(--radius);
+    padding:16px 20px;
+    margin-bottom:36px;
+  }
+  .rule-box .rule-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;}
+  .rule-box .rule-item{flex:1 1 200px;font-size:18px;}
+  .rule-box .rule-item b{color:var(--teal);}
+
+  section.exercise{margin-bottom:56px;}
+  section.exercise > h2{
+    font-size:24px;
+    margin:0 0 4px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  section.exercise > h2 .badge{
+    background:var(--accent);
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+    padding:3px 11px;
+    border-radius:999px;
+    flex-shrink:0;
+  }
+  section.exercise > p.instructions{color:var(--ink-soft);margin:0 0 22px;font-size:17.5px;}
+
+  .q-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:6px solid var(--accent);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    margin-bottom:16px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .q-card.state-correct{border-left-color:var(--good);background:var(--good-bg);}
+  .q-card.state-wrong{border-left-color:var(--bad);background:var(--bad-bg);}
+  .q-card.state-almost{border-left-color:var(--amber);background:var(--amber-bg);}
+
+  .q-num{font-weight:700;color:var(--accent);margin-right:4px;}
+  .q-context{color:var(--ink-soft);font-size:16.5px;margin:0 0 8px;}
+  .q-sentence{font-size:20px;margin:0 0 12px;}
+  .q-sentence .fixed{white-space:nowrap;}
+
+  .choice-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .choice-row:last-of-type{margin-bottom:0;}
+  .choice-label{
+    font-size:14.5px;
+    color:var(--ink-soft);
+    width:100%;
+    margin-bottom:2px;
+  }
+  button.chip{
+    font-family:inherit;
+    font-size:18px;
+    border:2px solid var(--border);
+    background:var(--paper);
+    color:var(--ink);
+    padding:8px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:all .12s ease;
+  }
+  button.chip:hover{border-color:var(--accent);}
+  button.chip:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  button.chip.selected{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+    font-weight:700;
+  }
+
+  .feedback{
+    margin-top:10px;
+    font-size:16.5px;
+    padding:10px 14px;
+    border-radius:10px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.fb-correct{background:var(--good-bg);color:var(--good);}
+  .feedback.fb-wrong{background:var(--bad-bg);color:var(--bad);}
+  .feedback.fb-almost{background:var(--amber-bg);color:var(--amber);}
+  .feedback ul{margin:6px 0 0;padding-left:20px;}
+  .feedback .icon{font-weight:700;margin-right:4px;}
+
+  .text-answer-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+  input.text-answer{
+    font-family:inherit;
+    font-size:19px;
+    padding:9px 12px;
+    border:2px solid var(--border);
+    border-radius:10px;
+    background:var(--paper);
+    color:var(--ink);
+    min-width:220px;
+    flex:1 1 220px;
+  }
+  input.text-answer:focus-visible{outline:3px solid var(--teal);outline-offset:1px;border-color:var(--teal);}
+  button.apostrophe-btn{
+    font-family:inherit;
+    font-size:20px;
+    font-weight:700;
+    border:2px solid var(--teal);
+    background:var(--teal-soft);
+    color:var(--teal);
+    width:46px;
+    height:46px;
+    border-radius:10px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  button.apostrophe-btn:hover{background:var(--teal);color:#fff;}
+  button.apostrophe-btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+  .apostrophe-hint{font-size:14.5px;color:var(--ink-soft);width:100%;margin-top:4px;}
+
+  .eval-btn{
+    display:block;
+    margin:26px auto 6px;
+    font-family:inherit;
+    font-size:20px;
+    font-weight:700;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    padding:14px 34px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .eval-btn:hover{background:#B7431F;}
+  .eval-btn:focus-visible{outline:3px solid var(--teal);outline-offset:3px;}
+
+  .score-line{
+    text-align:center;
+    font-size:19px;
+    font-weight:700;
+    margin-top:10px;
+    min-height:26px;
+  }
+
+  footer.note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:15px;
+    margin-top:50px;
+  }
+
+  @media (max-width:480px){
+    body{font-size:17.5px;}
+    .q-sentence{font-size:18.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>Don't, nebo doesn't?</h1>
+    <p>Procvič si zápor v přítomném čase prostém.</p>
+  </header>
+
+  <div class="rule-box">
+    <strong>Připomínka pravidla</strong>
+    <div class="rule-row">
+      <div class="rule-item"><b>I / you / we / they</b> → don't + sloveso</div>
+      <div class="rule-item"><b>he / she / it</b> → doesn't + sloveso</div>
+    </div>
+  </div>
+
+  <section class="exercise" id="ex1">
+    <h2><span class="badge">Cvičení 1</span> Vyber správně</h2>
+    <p class="instructions">Nejdřív vyber <em>don't</em>, nebo <em>doesn't</em>. Pak vyber sloveso, které se do věty hodí.</p>
+    <div id="ex1-questions"></div>
+    <button class="eval-btn" id="ex1-eval">Vyhodnotit cvičení 1</button>
+    <div class="score-line" id="ex1-score"></div>
+  </section>
+
+  <section class="exercise" id="ex2">
+    <h2><span class="badge">Cvičení 2</span> Napiš sám/sama</h2>
+    <p class="instructions">Doplň don't/doesn't a sloveso ze závorky. Pokud si nevíš rady s apostrofem <b>'</b>, klikni na tlačítko s apostrofem a vlož ho na místo, kde bliká kurzor.</p>
+    <div id="ex2-questions"></div>
+    <button class="eval-btn" id="ex2-eval">Vyhodnotit cvičení 2</button>
+    <div class="score-line" id="ex2-score"></div>
+  </section>
+
+  <footer class="note">Angličtina 7. ročník — zápor v přítomném čase prostém</footer>
+</div>
+
+<script>
+// ---------- DATA ----------
+
+const translations = {
+  eat:"jíst", drink:"pít", watch:"dívat se, sledovat", play:"hrát",
+  listen:"poslouchat", live:"bydlet, žít", work:"pracovat", study:"studovat",
+  speak:"mluvit", write:"psát", have:"mít", make:"vyrábět, dělat",
+  do:"dělat", get:"get up = vstávat", go:"jít, chodit", meet:"setkat se",
+  sleep:"spát", walk:"chodit pěšky", drive:"řídit", fly:"létat",
+  read:"číst", cook:"vařit", wash:"mýt"
+};
+
+const ex1Data = [
+  {context:"Alex je vegetarián.", subject:"He", rest:"meat.", aux:"doesn't", verbs:["eat","drink","watch"], correct:"eat"},
+  {context:"Nemám ráda kávu.", subject:"I", rest:"coffee in the morning.", aux:"don't", verbs:["drink","eat","read"], correct:"drink"},
+  {context:"Sarah miluje plavání, ne fotbal.", subject:"She", rest:"football.", aux:"doesn't", verbs:["play","watch","listen"], correct:"play"},
+  {context:"Chodíme do školy brzy ráno.", subject:"We", rest:"TV before school.", aux:"don't", verbs:["watch","listen","drive"], correct:"watch"},
+  {context:"Moji prarodiče bydlí ve městě.", subject:"They", rest:"in the countryside.", aux:"don't", verbs:["live","work","study"], correct:"live"},
+  {context:"Ben umí jen anglicky.", subject:"He", rest:"French.", aux:"doesn't", verbs:["speak","listen","write"], correct:"speak"},
+  {context:"Emma má hodně domácích úkolů.", subject:"She", rest:"free time in the evening.", aux:"doesn't", verbs:["have","do","play"], correct:"have"},
+  {context:"Domácí úkoly dělám po večeři.", subject:"I", rest:"my homework before dinner.", aux:"don't", verbs:["do","have","make"], correct:"do"},
+  {context:"Tom vstává o víkendu pozdě.", subject:"He", rest:"up early at the weekend.", aux:"doesn't", verbs:["get","go","wake"], correct:"get"},
+  {context:"Moji kamarádi jdou po škole domů.", subject:"They", rest:"in a café.", aux:"don't", verbs:["meet","watch","eat"], correct:"meet"},
+  {context:"Táta má v sobotu volno.", subject:"He", rest:"on Saturdays.", aux:"doesn't", verbs:["work","study","play"], correct:"work"},
+  {context:"Sestra chodí spát brzy.", subject:"She", rest:"to bed at midnight.", aux:"doesn't", verbs:["go","sleep","walk"], correct:"go"},
+  {context:"O víkendu máme hodně práce.", subject:"We", rest:"much at the weekend.", aux:"don't", verbs:["relax","work","study"], correct:"relax"},
+  {context:"Brácha má radši videohry.", subject:"He", rest:"books.", aux:"doesn't", verbs:["read","watch","play"], correct:"read"},
+  {context:"Do školy chodím pěšky.", subject:"I", rest:"my bike to school.", aux:"don't", verbs:["ride","drive","fly"], correct:"ride"},
+  {context:"Máma vaří večeři každý den.", subject:"My dad", rest:"dinner.", aux:"doesn't", verbs:["cook","eat","wash"], correct:"cook"}
+];
+
+const ex2Data = [
+  {context:"Bojí se pavouků.", subject:"He", rest:"spiders.", verb:"like"},
+  {context:"Nejím ryby.", subject:"I", rest:"fish.", verb:"eat"},
+  {context:"Nemáme rádi horory.", subject:"We", rest:"horror films.", verb:"watch"},
+  {context:"Neumí hrát na klavír.", subject:"She", rest:"the piano.", verb:"play"},
+  {context:"Do školy jezdí autem.", subject:"They", rest:"to school by bus.", verb:"go"},
+  {context:"Úkoly dělá večer, ne ráno.", subject:"My brother", rest:"his homework in the morning.", verb:"do"},
+  {context:"Nemáš rád čaj.", subject:"You", rest:"tea.", verb:"drink"},
+  {context:"Na Sahaře je velké sucho.", subject:"It", rest:"in the desert.", verb:"rain"},
+  {context:"Bydlí v Brně.", subject:"My friends", rest:"in Prague.", verb:"live"},
+  {context:"Má jen tlačítkový telefon.", subject:"My grandma", rest:"a smartphone.", verb:"use"}
+];
+
+function expectedAuxFor(subject){
+  const s = subject.trim().toLowerCase();
+  if (s === "i" || s === "you" || s === "we" || s === "they" || s.startsWith("my friends") || s.startsWith("my grandparents")) return "don't";
+  return "doesn't"; // he/she/it and singular-name subjects
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ---------- EXERCISE 1 BUILD ----------
+
+const ex1Container = document.getElementById('ex1-questions');
+const ex1State = ex1Data.map(() => ({ aux: null, verb: null }));
+
+ex1Data.forEach((q, i) => {
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'ex1-card-' + i;
+
+  const ctx = document.createElement('p');
+  ctx.className = 'q-context';
+  ctx.textContent = q.context;
+  card.appendChild(ctx);
+
+  const sentence = document.createElement('p');
+  sentence.className = 'q-sentence';
+  sentence.innerHTML = '<span class="q-num">' + (i + 1) + '.</span> <span class="fixed">' + q.subject + '</span> ______ ______ ' + q.rest;
+  card.appendChild(sentence);
+
+  const auxRow = document.createElement('div');
+  auxRow.className = 'choice-row';
+  ['don\'t', 'doesn\'t'].forEach(opt => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = opt;
+    b.addEventListener('click', () => {
+      ex1State[i].aux = opt;
+      auxRow.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      b.classList.add('selected');
+    });
+    auxRow.appendChild(b);
+  });
+  card.appendChild(auxRow);
+
+  const verbRow = document.createElement('div');
+  verbRow.className = 'choice-row';
+  shuffle(q.verbs).forEach(v => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = v;
+    b.addEventListener('click', () => {
+      ex1State[i].verb = v;
+      verbRow.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      b.classList.add('selected');
+    });
+    verbRow.appendChild(b);
+  });
+  card.appendChild(verbRow);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  fb.id = 'ex1-fb-' + i;
+  card.appendChild(fb);
+
+  ex1Container.appendChild(card);
+});
+
+document.getElementById('ex1-eval').addEventListener('click', () => {
+  let correctCount = 0;
+  ex1Data.forEach((q, i) => {
+    const card = document.getElementById('ex1-card-' + i);
+    const fb = document.getElementById('ex1-fb-' + i);
+    const chosen = ex1State[i];
+    card.classList.remove('state-correct', 'state-wrong');
+    fb.classList.remove('show', 'fb-correct', 'fb-wrong');
+    fb.innerHTML = '';
+
+    if (chosen.aux === null || chosen.verb === null) {
+      card.classList.add('state-wrong');
+      fb.classList.add('show', 'fb-wrong');
+      fb.innerHTML = '<span class="icon">✗</span>Ještě sis nevybral/a obě možnosti.';
+      return;
+    }
+
+    const auxOK = chosen.aux === q.aux;
+    const verbOK = chosen.verb === q.correct;
+
+    if (auxOK && verbOK) {
+      correctCount++;
+      card.classList.add('state-correct');
+      fb.classList.add('show', 'fb-correct');
+      fb.innerHTML = '<span class="icon">✓</span>Správně!';
+      return;
+    }
+
+    card.classList.add('state-wrong');
+    fb.classList.add('show', 'fb-wrong');
+    let msgs = [];
+    if (!auxOK) {
+      msgs.push('Podmět <b>' + q.subject + '</b> potřebuje <b>' + q.aux + '</b> (I/you/we/they → don\'t, he/she/it → doesn\'t).');
+    }
+    if (!verbOK) {
+      let list = '<ul>' + q.verbs.map(v => {
+        const mark = v === q.correct ? ' ✓ správně' : '';
+        return '<li><b>' + v + '</b> – ' + (translations[v] || '') + mark + '</li>';
+      }).join('') + '</ul>';
+      msgs.push('Do věty se hodí jiné sloveso. Význam sloves:' + list);
+    }
+    fb.innerHTML = '<span class="icon">✗</span>' + msgs.join(' ');
+  });
+  document.getElementById('ex1-score').textContent = 'Výsledek: ' + correctCount + ' / ' + ex1Data.length;
+});
+
+// ---------- EXERCISE 2 BUILD ----------
+
+const ex2Container = document.getElementById('ex2-questions');
+
+ex2Data.forEach((q, i) => {
+  const aux = expectedAuxFor(q.subject);
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'ex2-card-' + i;
+
+  const ctx = document.createElement('p');
+  ctx.className = 'q-context';
+  ctx.textContent = q.context;
+  card.appendChild(ctx);
+
+  const sentence = document.createElement('p');
+  sentence.className = 'q-sentence';
+  sentence.innerHTML = '<span class="q-num">' + (i + 1) + '.</span> <span class="fixed">' + q.subject + '</span> ______ (' + q.verb + ') ' + q.rest;
+  card.appendChild(sentence);
+
+  const row = document.createElement('div');
+  row.className = 'text-answer-row';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'text-answer';
+  input.id = 'ex2-input-' + i;
+  input.setAttribute('autocomplete', 'off');
+  input.setAttribute('autocapitalize', 'off');
+  input.setAttribute('spellcheck', 'false');
+  input.placeholder = "don't / doesn't + sloveso";
+  row.appendChild(input);
+
+  const apoBtn = document.createElement('button');
+  apoBtn.type = 'button';
+  apoBtn.className = 'apostrophe-btn';
+  apoBtn.textContent = "'";
+  apoBtn.title = "Vložit apostrof";
+  apoBtn.addEventListener('click', () => {
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+    input.value = input.value.slice(0, start) + "'" + input.value.slice(end);
+    input.focus();
+    input.setSelectionRange(start + 1, start + 1);
+  });
+  row.appendChild(apoBtn);
+
+  const hint = document.createElement('div');
+  hint.className = 'apostrophe-hint';
+  hint.textContent = "Nevíš, jak napsat apostrof '? Klikni na tlačítko vedle políčka.";
+  row.appendChild(hint);
+
+  card.appendChild(row);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  fb.id = 'ex2-fb-' + i;
+  card.appendChild(fb);
+
+  ex2Container.appendChild(card);
+});
+
+function canonicalAux(word){
+  const w = word.toLowerCase().replace(/['’]/g, '');
+  if (w === 'dont') return "don't";
+  if (w === 'doesnt') return "doesn't";
+  return null;
+}
+
+document.getElementById('ex2-eval').addEventListener('click', () => {
+  let correctCount = 0;
+  ex2Data.forEach((q, i) => {
+    const expectedAux = expectedAuxFor(q.subject);
+    const input = document.getElementById('ex2-input-' + i);
+    const card = document.getElementById('ex2-card-' + i);
+    const fb = document.getElementById('ex2-fb-' + i);
+    card.classList.remove('state-correct', 'state-wrong', 'state-almost');
+    fb.classList.remove('show', 'fb-correct', 'fb-wrong', 'fb-almost');
+    fb.innerHTML = '';
+
+    const raw = input.value.trim();
+    if (!raw) {
+      card.classList.add('state-wrong');
+      fb.classList.add('show', 'fb-wrong');
+      fb.innerHTML = '<span class="icon">✗</span>Políčko je prázdné. Zkus doplnit odpověď.';
+      return;
+    }
+
+    const parts = raw.toLowerCase().split(/\s+/);
+    const firstWord = parts[0];
+    const verbPart = parts.slice(1).join(' ');
+    const auxCanon = canonicalAux(firstWord);
+    const hasApostrophe = firstWord.includes("'") || firstWord.includes("’");
+
+    if (auxCanon === null) {
+      card.classList.add('state-wrong');
+      fb.classList.add('show', 'fb-wrong');
+      fb.innerHTML = '<span class="icon">✗</span>Nepoznávám na začátku <b>don\'t</b>, nebo <b>doesn\'t</b>. Zkontroluj, jak jsi větu začal/a.';
+      return;
+    }
+
+    const auxOK = auxCanon === expectedAux;
+    const verbOK = verbPart === q.verb.toLowerCase();
+
+    if (auxOK && verbOK && hasApostrophe) {
+      correctCount++;
+      card.classList.add('state-correct');
+      fb.classList.add('show', 'fb-correct');
+      fb.innerHTML = '<span class="icon">✓</span>Správně!';
+      return;
+    }
+
+    if (auxOK && verbOK && !hasApostrophe) {
+      card.classList.add('state-almost');
+      fb.classList.add('show', 'fb-almost');
+      fb.innerHTML = '<span class="icon">△</span>Skoro! Gramaticky i slovíčko správně, ale chybí apostrof: napiš <b>' + expectedAux + '</b> místo "' + firstWord + '".';
+      return;
+    }
+
+    card.classList.add('state-wrong');
+    fb.classList.add('show', 'fb-wrong');
+    let msgs = [];
+    if (!auxOK) {
+      msgs.push('Podmět <b>' + q.subject + '</b> potřebuje <b>' + expectedAux + '</b> (I/you/we/they → don\'t, he/she/it → doesn\'t).');
+    }
+    if (!hasApostrophe) {
+      msgs.push('Nezapomeň na apostrof: ' + expectedAux + '.');
+    }
+    if (!verbOK) {
+      msgs.push('Sloveso má být <b>' + q.verb + '</b> (ze závorky), ty jsi napsal/a "' + (verbPart || '—') + '".');
+    }
+    fb.innerHTML = '<span class="icon">✗</span>' + msgs.join(' ');
+  });
+  document.getElementById('ex2-score').textContent = 'Výsledek: ' + correctCount + ' / ' + ex2Data.length;
+});
+</script>
+</body>
+</html>
