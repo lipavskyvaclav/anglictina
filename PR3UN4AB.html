@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telling the way – procvičení před testem</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1f2430;--mut:#5d6577;--pri:#2f5bd8;--ok:#16794a;--okbg:#e4f5ec;--bad:#b3261e;--badbg:#fdeceb;--bd:#d9dde8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--card:#1e222d;--tx:#eceef4;--mut:#a3aabb;--pri:#7c9cff;--ok:#5fd39a;--okbg:#17332638;--bad:#ff8a80;--badbg:#3a1d1c;--bd:#33394a}}
+:root[data-theme="dark"]{--bg:#14171f;--card:#1e222d;--tx:#eceef4;--mut:#a3aabb;--pri:#7c9cff;--ok:#5fd39a;--okbg:#17332638;--bad:#ff8a80;--badbg:#3a1d1c;--bd:#33394a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.6rem;margin:.4em 0 .1em}
+.sub{color:var(--mut);margin:0 0 16px}
+section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:16px 0}
+h2{font-size:1.15rem;margin:0 0 4px;color:var(--pri)}
+.hint{background:var(--bg);border-left:4px solid var(--pri);padding:8px 12px;border-radius:6px;margin:8px 0 12px;font-size:.93rem}
+.item{padding:8px 0;border-top:1px solid var(--bd)}
+.item .row{display:flex;gap:8px;align-items:baseline}
+.n{color:var(--mut);min-width:1.6em}
+select{font:inherit;padding:3px 6px;border:1.5px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx);max-width:100%}
+select.ok{border-color:var(--ok);background:var(--okbg)}
+select.bad{border-color:var(--bad);background:var(--badbg)}
+.fb{margin:4px 0 0 1.9em;font-size:.9rem;border-radius:6px;padding:0}
+.fb.bad{color:var(--bad)}
+.fb.ok{color:var(--ok)}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+button{font:inherit;padding:8px 16px;border-radius:10px;border:0;background:var(--pri);color:#fff;cursor:pointer;font-weight:600}
+button.sec{background:transparent;color:var(--pri);border:1.5px solid var(--pri)}
+.score{font-weight:700}
+</style>
+</head>
+<body>
+<main>
+<h1>Telling the way</h1>
+<p class="sub">Procvičení před testem · 5 cvičení po 10 příkladech. U každého cvičení klikni na <b>Vyhodnotit</b>.</p>
+<div id="app"></div>
+</main>
+<script>
+const NONE="–";
+const PL=["bank","bus station","chemist's","harbour","hill","motorway","prison","roundabout","skyscraper","stadium","statue","station"];
+const E=[
+{t:"1. Instrukce – Giving directions",h:"Vyber správné sloveso nebo frázi. Go along/down/round/over/under/past, turn left/right, take the … turning, cross the road.",
+o:null,i:[
+["To get to the other side of the river, ___ the bridge.",["Go over","Go past","Go along"],["Go over"],"Přes most = go over the bridge (over = přes)."],
+["___ this street till you come to the traffic lights.",["Go along","Go under","Take"],["Go along"],"Jít podél ulice = go along / go down the street."],
+["___ left at the traffic lights.",["Turn","Take","Go"],["Turn"],"Odbočit = turn left / turn right."],
+["___ the second turning on the right.",["Take","Turn","Cross"],["Take"],"Se slovem turning (odbočka) použijeme take: take the second turning."],
+["___ the bus stop and you'll see the bank on your left.",["Go past","Go round","Turn"],["Go past"],"Projít kolem = go past."],
+["___ straight on until you see the station.",["Go","Take","Cross"],["Go"],"Jít rovně = go straight on."],
+["___ the roundabout and take the second exit.",["Go round","Go over","Go under"],["Go round"],"Kruhový objezd objíždíme: go round the roundabout."],
+["___ the road at the zebra crossing.",["Cross","Turn","Take"],["Cross"],"Přejít silnici = cross the road."],
+["___ this street until you come to the church.",["Go down","Cross","Turn"],["Go down"],"Go down the street = jít touto ulicí (down se k ulici hodí stejně jako along)."],
+["The railway bridge is above the road. ___ the bridge and you'll see the park.",["Go under","Go over","Go round"],["Go under"],"Most je nad silnicí, takže jdeme pod ním: go under the bridge."]
+]},
+{t:"2. Slovní zásoba – místa ve městě",h:"Podle popisu vyber správné místo. Dvě slova z nabídky nepotřebuješ.",
+o:PL,i:[
+["Boats and ships stop here.",PL,["harbour"],"harbour = přístav."],
+["You can buy medicine here.",PL,["chemist's"],"chemist's = lékárna / drogerie."],
+["Cars drive very fast on this big road between cities.",PL,["motorway"],"motorway = dálnice."],
+["This is a very, very tall building in a big city.",PL,["skyscraper"],"skyscraper = mrakodrap."],
+["Trains stop here.",PL,["station"],"station = nádraží (vlakové); bus station = autobusové nádraží."],
+["Cars drive round and round here.",PL,["roundabout"],"roundabout = kruhový objezd."],
+["It is a figure of a famous person, made of stone or metal.",PL,["statue"],"statue = socha."],
+["It is higher than the land around it. You can walk up and see the town.",PL,["hill"],"hill = kopec."],
+["People who break the law stay here.",PL,["prison"],"prison = vězení."],
+["You go here to watch a football match.",PL,["stadium"],"stadium = stadion."]
+]},
+{t:"3. Členy – a / an / the / some / any",h:"<b>a/an</b> = poprvé, jedna věc (an před samohláskou) · <b>the</b> = už víme která · <b>some</b> = v kladné větě, více věcí · <b>any</b> = v záporu a otázce, více věcí.",
+o:null,i:[
+["Excuse me, is there ___ cinema near here?",["a","an","the","some","any"],["a"],"Ptáme se poprvé na jedno kino, které neznáme = a."],
+["Go down here till you come to a roundabout. Turn left at ___ roundabout.",["a","an","the","some","any"],["the"],"Kruhový objezd už byl zmíněn, víme který = the."],
+["There's ___ good restaurant next to the bank.",["a","an","the","some","any"],["a"],"Jedna restaurace, poprvé zmíněná; good začíná souhláskou = a."],
+["There aren't ___ banks in this street.",["a","an","the","some","any"],["any"],"Záporná věta + více věcí (banks) = any."],
+["There are ___ nice shops in the town centre.",["a","an","the","some","any"],["some"],"Kladná věta + více věcí (shops) = some."],
+["The museum is in ___ old building next to the park.",["a","an","the","some","any"],["an"],"old začíná samohláskou = an."],
+["Are there ___ toilets near here?",["a","an","the","some","any"],["any"],"Otázka + více věcí (toilets) = any."],
+["Go past the bank. The chemist's is on ___ left.",["a","an","the","some","any"],["the"],"on the left / on the right – pevná fráze s the."],
+["Take ___ second turning on the right.",["a","an","the","some","any"],["the"],"Řadová číslovka (second) je skoro vždy s the."],
+["Is there ___ hotel near the station?",["a","an","the","some","any"],["a"],"Jedno hotel, které neznáme = a (hotel začíná souhláskou h)."]
+]},
+{t:"4. Předložky – at / on / in",h:"<b>at</b> = bod (at the traffic lights, at the end, at number 5) · <b>on</b> = ulice, povrch (on Gordon Road, on the left, on the top floor) · <b>in</b> = uvnitř, město (in the centre, in Litomyšl).",
+o:null,i:[
+["Turn left ___ the traffic lights.",["at","on","in"],["at"],"Konkrétní bod na cestě = at the traffic lights."],
+["The bank is ___ Gordon Road.",["at","on","in"],["on"],"Ulice = on (on Gordon Road)."],
+["The hotel is ___ the town centre.",["at","on","in"],["in"],"Uvnitř oblasti / města = in the town centre."],
+["The café is ___ the corner.",["at","on","in"],["on","at"],"Správně on the corner i at the corner. In the corner znamená uvnitř místnosti."],
+["We often stand ___ the bridge and watch the boats.",["at","on","in"],["on","at"],"Stojíme na mostě = on the bridge; at the bridge (u mostu) je také možné."],
+["We had a picnic ___ the beach.",["at","on","in"],["at","on"],"Správně at the beach i on the beach."],
+["My friend lives ___ number 24 Bridge Street.",["at","on","in"],["at"],"S číslem domu používáme at (at number 24)."],
+["There's a great restaurant ___ the top floor of the hotel.",["at","on","in"],["on"],"Patro budovy = on the top floor."],
+["Turn right ___ the end of the street.",["at","on","in"],["at"],"Konec ulice = bod = at the end of the street."],
+["There are a lot of old trees ___ the park.",["at","on","in"],["in"],"Uvnitř parku = in the park."]
+]},
+{t:"5. „the“ před názvy míst",h:"<b>THE:</b> řeky (the Thames), státy s Republic/Kingdom/States, názvy s <i>of</i> (the United States of America), hotely, muzea, divadla, kina (the Natural History Museum). <b>BEZ THE:</b> města, parky, ulice, náměstí, paláce, mosty se jménem, obchody a restaurace s 's (Hyde Park, Oxford Street, Trafalgar Square, McDonald's).",
+o:null,i:[
+["My cousin lives in ___ Czech Republic.",["the",NONE],["the"],"Země s Republic / Kingdom mají the: the Czech Republic."],
+["We had a picnic in ___ Hyde Park.",["the",NONE],[NONE],"Parky jsou bez the: Hyde Park."],
+["The boat goes along ___ Thames.",["the",NONE],["the"],"Řeky mají the: the Thames, the Vltava."],
+["Turn left and you'll see ___ Trafalgar Square.",["the",NONE],[NONE],"Náměstí je bez the: Trafalgar Square."],
+["I love ___ Natural History Museum. It's free!",["the",NONE],["the"],"Muzea mají the: the Natural History Museum."],
+["The shops are on ___ Oxford Street.",["the",NONE],[NONE],"Ulice jsou bez the: Oxford Street."],
+["My friend lives in ___ United States of America.",["the",NONE],["the"],"Názvy se slovem of mají the: the United States of America, the Tower of London, the Bank of England."],
+["The King lives in ___ Buckingham Palace.",["the",NONE],[NONE],"Paláce jsou bez the: Buckingham Palace."],
+["Go over ___ Magdalen Bridge.",["the",NONE],[NONE],"Most se jménem místa/osoby je většinou bez the: Magdalen Bridge, Tower Bridge."],
+["Let's have lunch at ___ McDonald's.",["the",NONE],[NONE],"Obchody a restaurace s 's jsou bez the: McDonald's, Harrods, Starbucks."]
+]}
+];
+const app=document.getElementById("app");
+E.forEach((ex,ei)=>{
+ const s=document.createElement("section");
+ let h=`<h2>${ex.t}</h2><div class="hint">${ex.h}</div>`;
+ ex.i.forEach((it,ii)=>{
+  const id=`s${ei}_${ii}`;
+  const opts=`<option value="">…</option>`+it[1].map(o=>`<option value="${o}">${o}</option>`).join("");
+  const parts=it[0].split("___");
+  h+=`<div class="item"><div class="row"><span class="n">${ii+1}.</span><span>${parts[0]}<select id="${id}">${opts}</select>${parts[1]||""}</span></div><div class="fb" id="f${id}"></div></div>`;
+ });
+ h+=`<div class="bar"><button data-c="${ei}">Vyhodnotit</button><button class="sec" data-r="${ei}">Zkusit znovu</button><span class="score" id="sc${ei}"></span></div>`;
+ s.innerHTML=h;app.appendChild(s);
+});
+app.addEventListener("click",e=>{
+ const c=e.target.dataset.c,r=e.target.dataset.r;
+ if(c!==undefined)check(+c);
+ if(r!==undefined)reset(+r);
+});
+function check(ei){
+ let ok=0;
+ E[ei].i.forEach((it,ii)=>{
+  const id=`s${ei}_${ii}`,sel=document.getElementById(id),fb=document.getElementById("f"+id),v=sel.value;
+  sel.classList.remove("ok","bad");fb.className="fb";
+  if(!v){sel.classList.add("bad");fb.className="fb bad";fb.textContent="Vyber odpověď. Správně: "+it[2].join(" / ")+". "+it[3];return}
+  if(it[2].includes(v)){ok++;sel.classList.add("ok");fb.className="fb ok";fb.textContent="✓ Správně."+(it[2].length>1?" "+it[3]:"")}
+  else{sel.classList.add("bad");fb.className="fb bad";fb.textContent="✗ Správně: "+it[2].join(" / ")+". "+it[3]}
+ });
+ document.getElementById("sc"+ei).textContent=`Skóre: ${ok}/10`+(ok==10?" 🎉":"");
+}
+function reset(ei){
+ E[ei].i.forEach((it,ii)=>{
+  const id=`s${ei}_${ii}`,sel=document.getElementById(id);
+  sel.value="";sel.classList.remove("ok","bad");
+  const fb=document.getElementById("f"+id);fb.textContent="";fb.className="fb";
+ });
+ document.getElementById("sc"+ei).textContent="";
+}
+</script>
+</body>
+</html>
