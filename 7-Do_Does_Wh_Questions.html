@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Do / Does & Wh- Questions</title>
+<style>
+:root{
+  --bg:#EAF3EE; --card:#FFFFFF; --ink:#173F37; --sub:#4F6F67;
+  --teal:#1B4B43; --coral:#FF6B4A; --yellow:#FFD166; --line:#D3E4DC;
+  --ok:#2E9E5B; --bad:#E1553F;
+  --radius:14px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A17; --card:#16241F; --ink:#EAF3EE; --sub:#9FB8AF;
+    --teal:#5BC7A6; --coral:#FF8A6D; --yellow:#FFD166; --line:#22352D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A17; --card:#16241F; --ink:#EAF3EE; --sub:#9FB8AF;
+  --teal:#5BC7A6; --coral:#FF8A6D; --yellow:#FFD166; --line:#22352D;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.45;
+}
+header{
+  padding:24px 20px 18px; text-align:center;
+}
+header h1{margin:0 0 6px; font-size:clamp(22px,5vw,30px); letter-spacing:-0.02em;}
+header p{margin:0; color:var(--sub); font-size:15px;}
+nav.tabs{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+  padding:10px 12px 14px; border-bottom:1px solid var(--line);
+}
+nav.tabs button{
+  border:2px solid var(--teal); background:transparent; color:var(--teal);
+  padding:10px 16px; border-radius:999px; font-size:15px; font-weight:600;
+  cursor:pointer;
+}
+nav.tabs button.active{background:var(--teal); color:var(--card);}
+main{max-width:720px; margin:0 auto; padding:8px 16px 60px;}
+.part{display:none;}
+.part.active{display:block;}
+.intro{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; margin:14px 0; font-size:15px; color:var(--sub);
+}
+.q{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:16px; margin:14px 0;
+}
+.q .num{font-weight:700; color:var(--coral); font-size:13px; margin-bottom:4px;}
+.q .sentence{font-size:18px; font-weight:600; margin-bottom:12px;}
+.btnrow{display:flex; gap:10px; flex-wrap:wrap;}
+.choice{
+  border:2px solid var(--teal); background:transparent; color:var(--teal);
+  padding:10px 18px; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer;
+}
+.choice.correct{background:var(--ok); border-color:var(--ok); color:#fff;}
+.choice.wrong{background:var(--bad); border-color:var(--bad); color:#fff;}
+.choice[disabled]{cursor:default; opacity:.55;}
+.choice.correct[disabled], .choice.wrong[disabled]{opacity:1;}
+.feedback{margin-top:10px; font-size:14.5px; padding:10px 12px; border-radius:10px; display:none;}
+.feedback.show{display:block;}
+.feedback.ok{background:rgba(46,158,91,.13); color:var(--ok);}
+.feedback.bad{background:rgba(225,85,63,.13); color:var(--bad);}
+.yn{margin-top:10px; font-size:14px; color:var(--sub);}
+.yn label{margin-right:14px; cursor:pointer;}
+.fact{margin-top:8px; font-size:14px; color:var(--sub); display:none;}
+.fact.show{display:block;}
+.opt{
+  display:block; width:100%; text-align:left; border:2px solid var(--line);
+  background:var(--bg); color:var(--ink); padding:11px 14px; border-radius:10px;
+  font-size:15.5px; margin-bottom:8px; cursor:pointer;
+}
+.opt.correct{background:var(--ok); border-color:var(--ok); color:#fff;}
+.opt.wrong{background:var(--bad); border-color:var(--bad); color:#fff;}
+.opt[disabled]{cursor:default;}
+.tiles{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; min-height:44px;}
+.tile{
+  border:2px solid var(--teal); background:var(--card); color:var(--teal);
+  padding:8px 12px; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer;
+}
+.tile.used{opacity:.35; cursor:default;}
+.built{
+  min-height:44px; border:2px dashed var(--line); border-radius:10px; padding:10px 12px;
+  font-size:17px; font-weight:600; margin-bottom:10px;
+}
+.reset{
+  border:none; background:var(--line); color:var(--ink); padding:6px 12px;
+  border-radius:8px; font-size:13px; cursor:pointer;
+}
+.checkall{
+  display:block; margin:24px auto 0; background:var(--coral); color:#fff; border:none;
+  padding:14px 26px; border-radius:999px; font-size:17px; font-weight:700; cursor:pointer;
+}
+.checkall[disabled]{opacity:.4;}
+.result-note{margin-top:10px; font-size:14.5px; padding:10px 12px; border-radius:10px; display:none;}
+.result-note.show{display:block;}
+.summary{
+  text-align:center; font-weight:700; font-size:18px; margin:18px 0; display:none;
+}
+.summary.show{display:block;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Do / Does &amp; Wh- Questions</h1>
+  <p>Present Simple – otázky</p>
+</header>
+
+<nav class="tabs">
+  <button class="tabbtn active" data-t="1">1. Do / Does</button>
+  <button class="tabbtn" data-t="2">2. Wh- slova</button>
+  <button class="tabbtn" data-t="3">3. Postav otázku</button>
+</nav>
+
+<main>
+
+<section class="part active" id="part1">
+  <div class="intro">Vyber, jestli otázka začíná <b>Do</b>, nebo <b>Does</b>. Pak si tipni Yes/No – to se nehodnotí, je to jen pro zábavu!</div>
+  <div id="p1list"></div>
+</section>
+
+<section class="part" id="part2">
+  <div class="intro">Vyber správnou odpověď. Pozor – musí sedět nejen fakty, ale hlavně <b>tázací slovo</b>.</div>
+  <div id="p2list"></div>
+</section>
+
+<section class="part" id="part3">
+  <div class="intro">Klikej na slova ve správném pořadí a postav otázku. Až budeš mít hotovo všech 6, klikni na tlačítko dole.</div>
+  <div id="p3list"></div>
+  <button class="checkall" id="checkAllBtn">Zkontrolovat vše</button>
+  <div class="summary" id="p3summary"></div>
+</section>
+
+</main>
+
+<script>
+// ---------- TABS ----------
+document.querySelectorAll('.tabbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.part').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('part'+b.dataset.t).classList.add('active');
+  });
+});
+
+// ---------- PART 1 ----------
+const p1data = [
+  {pre:"", post:"you like pizza?", ans:"Do", pron:"you", yn:null},
+  {pre:"", post:"your best friend play computer games?", ans:"Does", pron:"he/she (tvůj kamarád/ka)", yn:null},
+  {pre:"", post:"your teacher sleep with his cat in the bed?", ans:"Does", pron:"he (tvůj učitel)", yn:null, fact:"Kdo ví! To je otázka pro tvého učitele. 😄"},
+  {pre:"", post:"birds sleep at night?", ans:"Do", pron:"they (ptáci)", yn:"Yes", fact:"Yes. Většina ptáků spí v noci, někteří dokonce vestoje."},
+  {pre:"", post:"Taylor Swift write her own songs?", ans:"Does", pron:"she (Taylor Swift)", yn:"Yes", fact:"Yes. Na většině svých písní se podílí jako spoluautorka."},
+  {pre:"", post:"the sun rise in the east?", ans:"Does", pron:"it (slunce)", yn:"Yes", fact:"Yes. Vždycky, na celé planetě."},
+  {pre:"", post:"your classmates like maths?", ans:"Do", pron:"they (tvoji spolužáci)", yn:null},
+  {pre:"", post:"a shark have bones?", ans:"Does", pron:"it (žralok)", yn:"No", fact:"No. Žraloci mají místo kostí chrupavku."},
+  {pre:"", post:"you and your friends play video games together?", ans:"Do", pron:"you (ty a kamarádi)", yn:null},
+  {pre:"", post:"Lionel Messi play for Argentina?", ans:"Does", pron:"he (Messi)", yn:"Yes", fact:"Yes. Hraje za argentinskou reprezentaci."}
+];
+
+const p1list = document.getElementById('p1list');
+p1data.forEach((item,i)=>{
+  const div = document.createElement('div');
+  div.className='q';
+  div.innerHTML = `
+    <div class="num">Otázka ${i+1}</div>
+    <div class="sentence">___ ${item.post}</div>
+    <div class="btnrow">
+      <button class="choice" data-v="Do">Do</button>
+      <button class="choice" data-v="Does">Does</button>
+    </div>
+    <div class="feedback"></div>
+    ${item.yn ? `<div class="yn"><label><input type="checkbox" class="ynbox"> Yes</label><label><input type="checkbox" class="ynbox"> No</label></div><div class="fact">${item.fact}</div>` : `<div class="yn"><label><input type="checkbox" class="ynbox"> Yes</label><label><input type="checkbox" class="ynbox"> No</label></div>${item.fact ? `<div class="fact">${item.fact}</div>` : ''}`}
+  `;
+  const btns = div.querySelectorAll('.choice');
+  const fb = div.querySelector('.feedback');
+  const fact = div.querySelector('.fact');
+  btns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      btns.forEach(b=>b.disabled=true);
+      if(btn.dataset.v===item.ans){
+        btn.classList.add('correct');
+        fb.textContent = "Správně! " + item.ans + " " + item.post.replace(/^./,c=>c.toLowerCase());
+        fb.className='feedback show ok';
+      } else {
+        btn.classList.add('wrong');
+        btns.forEach(b=>{if(b.dataset.v===item.ans) b.classList.add('correct');});
+        fb.textContent = `Ne tak úplně. Podmět je ${item.pron} → správně je "${item.ans} ${item.post.replace(/^./,c=>c.toLowerCase())}"`;
+        fb.className='feedback show bad';
+      }
+      if(fact) fact.classList.add('show');
+    });
+  });
+  const ynboxes = div.querySelectorAll('.ynbox');
+  ynboxes.forEach((box,bi)=>{
+    box.addEventListener('change',()=>{
+      if(box.checked) ynboxes.forEach((b,bj)=>{ if(bj!==bi) b.checked=false; });
+    });
+  });
+  p1list.appendChild(div);
+});
+
+// ---------- PART 2 ----------
+const p2data = [
+  {q:"Where do you do your homework?", opts:["my brother","in my room","at 6 o'clock","my homework"], correct:1, cz:"Kde si píšeš úkoly?"},
+  {q:"Who helps you with English?", opts:["my teacher","at school","in the evening","my exercise book"], correct:0, cz:"Kdo ti pomáhá s angličtinou?"},
+  {q:"When do you go to bed?", opts:["my mum","in the bathroom","at nine o'clock","a book"], correct:2, cz:"Kdy chodíš spát?"},
+  {q:"What do you eat for breakfast?", opts:["my dad","in the kitchen","in the morning","bread with cheese and ham"], correct:3, cz:"Co jíš k snídani?"},
+  {q:"Where do you take photos?", opts:["birds","in the park","at the weekend","my dad"], correct:1, cz:"Kde fotíš?"},
+  {q:"Who do you play football with?", opts:["my friends","on the pitch","after school","a ball"], correct:0, cz:"S kým hraješ fotbal?"},
+  {q:"When does your school start?", opts:["the teacher","in the classroom","at eight o'clock","maths"], correct:2, cz:"Kdy začíná škola?"},
+  {q:"What do you watch on TV?", opts:["my sister","in the living room","in the evening","films"], correct:3, cz:"Co sleduješ v televizi?"},
+  {q:"Where does your grandma live?", opts:["my cousin","in Prague","every summer","flowers"], correct:1, cz:"Kde bydlí tvoje babička?"},
+  {q:"Who makes dinner at your house?", opts:["my mum","in the kitchen","at six o'clock","soup"], correct:0, cz:"Kdo vaří večeři u vás doma?"}
+];
+
+const p2list = document.getElementById('p2list');
+p2data.forEach((item,i)=>{
+  const div = document.createElement('div');
+  div.className='q';
+  div.innerHTML = `
+    <div class="num">Otázka ${i+1}</div>
+    <div class="sentence">${item.q}</div>
+    <div class="opts"></div>
+    <div class="feedback"></div>
+  `;
+  const optsWrap = div.querySelector('.opts');
+  const fb = div.querySelector('.feedback');
+  item.opts.forEach((o,idx)=>{
+    const b = document.createElement('button');
+    b.className='opt'; b.textContent=o;
+    b.addEventListener('click',()=>{
+      optsWrap.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+      if(idx===item.correct){
+        b.classList.add('correct');
+        fb.textContent="Správně!";
+        fb.className='feedback show ok';
+      } else {
+        b.classList.add('wrong');
+        optsWrap.children[item.correct].classList.add('correct');
+        fb.textContent = `Ne, pozor na tázací slovo. Otázka znamená: "${item.cz}"`;
+        fb.className='feedback show bad';
+      }
+    });
+    optsWrap.appendChild(b);
+  });
+  p2list.appendChild(div);
+});
+
+// ---------- PART 3 ----------
+const p3data = [
+  {tiles:["go","Where","you","on holiday?","do"], answer:"Where do you go on holiday?"},
+  {tiles:["teach?","does","your teacher","What"], answer:"What does your teacher teach?"},
+  {tiles:["sit next to?","Who","you","do"], answer:"Who do you sit next to?"},
+  {tiles:["start?","does","the film","When"], answer:"When does the film start?"},
+  {tiles:["like doing?","your friends","What","do"], answer:"What do your friends like doing?"},
+  {tiles:["go in the summer?","does","your family","Where"], answer:"Where does your family go in the summer?"},
+  {tiles:["have English lessons?","When","you","do"], answer:"When do you have English lessons?"},
+  {tiles:["like eating?","does","your dog","What"], answer:"What does your dog like eating?"},
+  {tiles:["live?","Where","your grandparents","do"], answer:"Where do your grandparents live?"},
+  {tiles:["talk to after school?","Who","you","do"], answer:"Who do you talk to after school?"}
+];
+
+const p3list = document.getElementById('p3list');
+const p3state = p3data.map(()=>[]);
+
+p3data.forEach((item,i)=>{
+  const div=document.createElement('div');
+  div.className='q';
+  div.innerHTML=`
+    <div class="num">Otázka ${i+1}</div>
+    <div class="built" id="built${i}">&nbsp;</div>
+    <div class="tiles" id="tiles${i}"></div>
+    <button class="reset" data-i="${i}">Vymazat</button>
+    <div class="result-note" id="note${i}"></div>
+  `;
+  const tilesWrap = div.querySelector('#tiles'+i);
+  item.tiles.forEach((word,ti)=>{
+    const t=document.createElement('button');
+    t.className='tile'; t.textContent=word;
+    t.addEventListener('click',()=>{
+      if(t.classList.contains('used')) return;
+      t.classList.add('used');
+      p3state[i].push(word);
+      renderBuilt(i);
+    });
+    tilesWrap.appendChild(t);
+  });
+  div.querySelector('.reset').addEventListener('click',()=>{
+    p3state[i]=[];
+    tilesWrap.querySelectorAll('.tile').forEach(t=>t.classList.remove('used'));
+    renderBuilt(i);
+    document.getElementById('note'+i).className='result-note';
+  });
+  p3list.appendChild(div);
+});
+
+function renderBuilt(i){
+  const el = document.getElementById('built'+i);
+  el.textContent = p3state[i].length ? p3state[i].join(' ') : '\u00A0';
+}
+
+document.getElementById('checkAllBtn').addEventListener('click',()=>{
+  let correctCount=0;
+  p3data.forEach((item,i)=>{
+    const built = p3state[i].join(' ');
+    const note = document.getElementById('note'+i);
+    if(built===item.answer){
+      correctCount++;
+      note.textContent="Správně: "+item.answer;
+      note.className='result-note show ok';
+    } else {
+      note.textContent="Vaše pořadí: \""+(built||'—')+"\". Správně má být: \""+item.answer+"\"";
+      note.className='result-note show bad';
+    }
+  });
+  const summary = document.getElementById('p3summary');
+  summary.textContent = "Máš správně "+correctCount+" z "+p3data.length+" otázek.";
+  summary.classList.add('show');
+});
+</script>
+</body>
+</html>
