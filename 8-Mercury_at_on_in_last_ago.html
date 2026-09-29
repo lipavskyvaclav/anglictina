@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freddie Mercury - Life Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.8;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        p {
+            font-size: 1.1em;
+        }
+        select {
+            font-size: 1em;
+            padding: 2px 5px;
+            margin: 0 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        .btn-check {
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-check:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #27ae60;
+        }
+        .correct { background-color: #c8e6c9; border-color: #2e7d32; }
+        .incorrect { background-color: #ffcdd2; border-color: #c62828; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Freddie Mercury</h1>
+    <p><strong>Fill in the correct time preposition (in, on, at, last, ago):</strong></p>
+    
+    <p>
+        Freddie Mercury (born Farrokh Bulsara) <b>was born</b> <select id="q1"></select> 1946. 
+        He <b>grew up</b> in Zanzibar, but his family <b>moved to</b> England <select id="q2"></select> the 1960s. 
+        He <b>left school</b> <select id="q3"></select> the age of 18 and <b>went to university</b> in London.
+    </p>
+    <p>
+        He <b>got a job</b> at an airport. He <b>met</b> guitarist Brian May exactly 56 years <select id="q4"></select>. 
+        They started the famous band Queen. They worked very hard, often late <select id="q5"></select> night. 
+        Queen played their most famous concert <select id="q6"></select> July 13, 1985. 
+        Freddie wrote his best songs <select id="q7"></select> the summer of 1975.
+    </p>
+    <p>
+        He <b>fell in love with</b> Mary Austin, but they <b>broke up</b> a few years later. However, they stayed best friends. 
+        Sadly, Freddie got very sick and <b>retired</b> from public life <select id="q8"></select> 1991. 
+        He <b>died</b> <select id="q9"></select> November 24. It happened <select id="q10"></select> the evening.
+    </p>
+    <p>
+        The band released a famous movie called Bohemian Rhapsody 8 years <select id="q11"></select>. 
+        Fans all over the world celebrated his amazing music <select id="q12"></select> year because the song Bohemian Rhapsody was exactly 50 years old. 
+        Also, <select id="q13"></select> month, people remembered his 80th birthday. 
+        Millions of fans still listen to Queen <select id="q14"></select> the 21st century. 
+        Many people like to play their songs <select id="q15"></select> Christmas.
+    </p>
+
+    <button class="btn-check" onclick="checkAnswers()">Check Answers</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    const options = ["", "in", "on", "at", "last", "ago"];
+    const answers = ["in", "in", "at", "ago", "at", "on", "in", "in", "on", "in", "ago", "last", "last", "in", "at"];
+    
+    // Populate select elements
+    for (let i = 1; i <= 15; i++) {
+        let select = document.getElementById("q" + i);
+        options.forEach(opt => {
+            let optionElement = document.createElement("option");
+            optionElement.value = opt;
+            optionElement.text = opt;
+            select.appendChild(optionElement);
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        for (let i = 1; i <= 15; i++) {
+            let select = document.getElementById("q" + i);
+            select.classList.remove("correct", "incorrect");
+            
+            if (select.value === answers[i-1]) {
+                select.classList.add("correct");
+                score++;
+            } else {
+                select.classList.add("incorrect");
+            }
+        }
+        
+        let resultDiv = document.getElementById("result");
+        resultDiv.innerText = `Your score: ${score} / 15`;
+        if (score === 15) {
+            resultDiv.style.color = "#27ae60";
+            resultDiv.innerText += " - Excellent job!";
+        } else {
+            resultDiv.style.color = "#c62828";
+        }
+    }
+</script>
+
+</body>
+</html>
