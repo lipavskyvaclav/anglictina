@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Stages & Time Prepositions - Interactive Exercise</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f7;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 850px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f4f8;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #1a365d;
+        }
+        .slide-dots {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #4a5568;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .dot.active {
+            border-color: #3182ce;
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+        .dot.completed {
+            background: #48bb78;
+            color: white;
+        }
+        .person-badge {
+            display: inline-block;
+            background: #edf2f7;
+            color: #2d3748;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .qa-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            font-size: 1.25rem;
+            line-height: 2.2;
+        }
+        .qa-row {
+            margin-bottom: 15px;
+        }
+        .qa-row:last-child {
+            margin-bottom: 0;
+        }
+        .speaker-label {
+            font-weight: bold;
+            color: #3182ce;
+            margin-right: 8px;
+        }
+        .speaker-label.answer {
+            color: #38a169;
+        }
+        .dropzone {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 95px;
+            height: 38px;
+            padding: 0 12px;
+            margin: 0 4px;
+            border: 2px dashed #a0aec0;
+            border-radius: 6px;
+            background-color: #ffffff;
+            vertical-align: middle;
+            font-weight: bold;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dropzone.dragover {
+            background-color: #ebf8ff;
+            border-color: #3182ce;
+        }
+        .dropzone.filled {
+            border-style: solid;
+            border-color: #4a5568;
+            background-color: #edf2f7;
+        }
+        .dropzone.correct {
+            border-style: solid;
+            border-color: #2f855a;
+            background-color: #c6f6d5;
+            color: #22543d;
+        }
+        .dropzone.incorrect {
+            border-style: solid;
+            border-color: #c53030;
+            background-color: #fed7d7;
+            color: #742a2a;
+        }
+        .word-bank-title {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            min-height: 60px;
+            padding: 15px;
+            background: #edf2f7;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        .word-tile {
+            background: #ffffff;
+            border: 2px solid #cbd5e0;
+            border-radius: 6px;
+            padding: 6px 16px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #2d3748;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.15s, border-color 0.15s, background-color 0.15s;
+        }
+        .word-tile:hover {
+            border-color: #3182ce;
+            transform: translateY(-2px);
+        }
+        .word-tile.selected {
+            border-color: #3182ce;
+            background-color: #ebf8ff;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.3);
+        }
+        .word-tile.used {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .feedback {
+            text-align: center;
+            font-size: 1.15rem;
+            font-weight: bold;
+            min-height: 28px;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-nav {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+        .btn-nav:hover:not(:disabled) {
+            background: #cbd5e0;
+        }
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-check {
+            background: #3182ce;
+            color: white;
+            padding: 10px 28px;
+        }
+        .btn-check:hover {
+            background: #2b6cb0;
+        }
+        .btn-reset {
+            background: #718096;
+            color: white;
+        }
+        .btn-reset:hover {
+            background: #4a5568;
+        }
+        .center-Group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Life Stages & Past Simple</h1>
+        <div class="slide-dots" id="slideDots"></div>
+    </div>
+
+    <div id="personBadge" class="person-badge"></div>
+
+    <div class="qa-box">
+        <div class="qa-row" id="questionRow"></div>
+        <div class="qa-row" id="answerRow"></div>
+    </div>
+
+    <div class="word-bank-title">Drag words into the blanks (or click a word and then click a blank):</div>
+    <div class="word-bank" id="wordBank"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="controls">
+        <button class="btn btn-nav" id="prevBtn" onclick="changeSlide(-1)">&#8592; Previous</button>
+        <div class="center-Group">
+            <button class="btn btn-check" onclick="checkSlide()">Check Answers</button>
+            <button class="btn btn-reset" onclick="resetSlide()">Reset</button>
+        </div>
+        <button class="btn btn-nav" id="nextBtn" onclick="changeSlide(1)">Next &#8594;</button>
+    </div>
+</div>
+
+<script>
+    const slidesData = [
+        {
+            person: "1 / 12 — Cristiano Ronaldo (be born)",
+            qParts: ["When ", " Cristiano Ronaldo ", "?"],
+            qAnswers: ["was", "born"],
+            aParts: ["He was born ", " February 5, ", " 5:25 AM."],
+            aAnswers: ["on", "at"],
+            distractors: ["did", "be", "in", "ago"]
+        },
+        {
+            person: "2 / 12 — Lionel Messi (grow up)",
+            qParts: ["Where ", " Lionel Messi ", " up?"],
+            qAnswers: ["did", "grow"],
+            aParts: ["He ", " up in Argentina ", " the 1990s."],
+            aAnswers: ["grew", "in"],
+            distractors: ["was", "grown", "on", "at"]
+        },
+        {
+            person: "3 / 12 — Barack Obama (start school)",
+            qParts: ["When ", " Barack Obama ", " primary school?"],
+            qAnswers: ["did", "start"],
+            aParts: ["He ", " school ", " the age of six."],
+            aAnswers: ["started", "at"],
+            distractors: ["was", "starting", "in", "on"]
+        },
+        {
+            person: "4 / 12 — Walt Disney (leave high school)",
+            qParts: ["Why ", " Walt Disney ", " high school?"],
+            qAnswers: ["did", "leave"],
+            aParts: ["He ", " high school ", " the summer of 1918 to join the Red Cross."],
+            aAnswers: ["left", "in"],
+            distractors: ["was", "leaved", "on", "at"]
+        },
+        {
+            person: "5 / 12 — Elon Musk (move to / university)",
+            qParts: ["Where ", " Elon Musk ", " to study at university?"],
+            qAnswers: ["did", "move"],
+            aParts: ["He ", " to Canada ", " June 1989."],
+            aAnswers: ["moved", "in"],
+            distractors: ["do", "moving", "on", "at"]
+        },
+        {
+            person: "6 / 12 — Brad Pitt (get a job)",
+            qParts: ["What job ", " Brad Pitt ", " before he became a famous actor?"],
+            qAnswers: ["did", "get"],
+            aParts: ["He ", " a job as a chicken mascot and worked ", " weekends."],
+            aAnswers: ["got", "at"],
+            distractors: ["was", "gotten", "in", "last"]
+        },
+        {
+            person: "7 / 12 — Prince William & Kate (meet & fall in love)",
+            qParts: ["Where ", " Prince William ", " Kate Middleton?"],
+            qAnswers: ["did", "meet"],
+            aParts: ["He ", " her at university and they ", " in love ", " 2002."],
+            aAnswers: ["met", "fell", "in"],
+            distractors: ["was", "fall", "on", "at"]
+        },
+        {
+            person: "8 / 12 — David & Victoria Beckham (get married)",
+            qParts: ["When ", " David Beckham ", " married to Victoria?"],
+            qAnswers: ["did", "get"],
+            aParts: ["They ", " married at a castle ", " July 4, 1999."],
+            aAnswers: ["got", "on"],
+            distractors: ["were", "getting", "in", "at"]
+        },
+        {
+            person: "9 / 12 — Beyoncé (be / get pregnant)",
+            qParts: ["When ", " Beyoncé ", " with her twins?"],
+            qAnswers: ["was", "pregnant"],
+            aParts: ["She ", " pregnant in 2016, and fans celebrated the twins' birthday ", " summer."],
+            aAnswers: ["got", "last"],
+            distractors: ["did", "get", "ago", "on"]
+        },
+        {
+            person: "10 / 12 — Shakira & Gerard Piqué (break up)",
+            qParts: ["When ", " Shakira ", " up with Gerard Piqué?"],
+            qAnswers: ["did", "break"],
+            aParts: ["She ", " up with him 4 years ", "."],
+            aAnswers: ["broke", "ago"],
+            distractors: ["was", "broken", "last", "in"]
+        },
+        {
+            person: "11 / 12 — Roger Federer (retire)",
+            qParts: ["When ", " Roger Federer ", " from professional tennis?"],
+            qAnswers: ["did", "retire"],
+            aParts: ["He ", " 4 years ", " and played his final match ", " night."],
+            aAnswers: ["retired", "ago", "at"],
+            distractors: ["was", "last", "in", "on"]
+        },
+        {
+            person: "12 / 12 — Queen Elizabeth II (die)",
+            qParts: ["When ", " Queen Elizabeth II ", "?"],
+            qAnswers: ["did", "die"],
+            aParts: ["She ", " ", " September 8, 2022, ", " the afternoon."],
+            aAnswers: ["died", "on", "in"],
+            distractors: ["was", "dead", "at", "ago"]
+        }
+    ];
+
+    let currentSlide = 0;
+    let selectedTileIndex = null;
+
+    // Store state per slide
+    const slideStates = slidesData.map(slide => {
+        const allWords = [...slide.qAnswers, ...slide.aAnswers, ...slide.distractors];
+        // Shuffle words
+        for (let i = allWords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allWords[i], allWords[j]] = [allWords[j], allWords[i]];
+        }
+        const totalBlanks = slide.qAnswers.length + slide.aAnswers.length;
+        return {
+            words: allWords,
+            userChoices: new Array(totalBlanks).fill(null), // stores index in words array
+            completed: false
+        };
+    });
+
+    function init() {
+        renderDots();
+        renderSlide();
+    }
+
+    function renderDots() {
+        const dotsContainer = document.getElementById("slideDots");
+        dotsContainer.innerHTML = "";
+        slidesData.forEach((_, idx) => {
+            const dot = document.createElement("div");
+            dot.className = "dot" + (idx === currentSlide ? " active" : "") + (slideStates[idx].completed ? " completed" : "");
+            dot.innerText = idx + 1;
+            dot.onclick = () => {
+                currentSlide = idx;
+                selectedTileIndex = null;
+                renderDots();
+                renderSlide();
+            };
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    function buildSentenceHTML(parts, startBlankIndex, labelText, isAnswer) {
+        let html = `<span class="speaker-label ${isAnswer ? 'answer' : ''}">${labelText}</span>`;
+        const state = slideStates[currentSlide];
+        for (let i = 0; i < parts.length; i++) {
+            html += `<span>${parts[i]}</span>`;
+            if (i < parts.length - 1) {
+                const blankIdx = startBlankIndex + i;
+                const wordIdx = state.userChoices[blankIdx];
+                const wordText = wordIdx !== null ? state.words[wordIdx] : "";
+                const filledClass = wordIdx !== null ? "filled" : "";
+                html += `<span class="dropzone ${filledClass}" data-blank="${blankIdx}" 
+                            onclick="handleBlankClick(${blankIdx})"
+                            ondragover="handleDragOver(event)"
+                            ondragleave="handleDragLeave(event)"
+                            ondrop="handleDrop(event, ${blankIdx})">${wordText}</span>`;
+            }
+        }
+        return html;
+    }
+
+    function renderSlide() {
+        const slide = slidesData[currentSlide];
+        const state = slideStates[currentSlide];
+
+        document.getElementById("personBadge").innerText = slide.person;
+        document.getElementById("feedback").innerText = "";
+
+        const qRow = document.getElementById("questionRow");
+        const aRow = document.getElementById("answerRow");
+
+        qRow.innerHTML = buildSentenceHTML(slide.qParts, 0, "Q:", false);
+        aRow.innerHTML = buildSentenceHTML(slide.aParts, slide.qAnswers.length, "A:", true);
+
+        const bank = document.getElementById("wordBank");
+        bank.innerHTML = "";
+        state.words.forEach((word, idx) => {
+            const isUsed = state.userChoices.includes(idx);
+            const isSelected = selectedTileIndex === idx;
+            const tile = document.createElement("div");
+            tile.className = "word-tile" + (isUsed ? " used" : "") + (isSelected ? " selected" : "");
+            tile.innerText = word;
+            tile.draggable = !isUsed;
+            tile.onclick = () => handleTileClick(idx);
+            tile.ondragstart = (e) => handleDragStart(e, idx);
+            bank.appendChild(tile);
+        });
+
+        document.getElementById("prevBtn").disabled = currentSlide === 0;
+        document.getElementById("nextBtn").disabled = currentSlide === slidesData.length - 1;
+    }
+
+    function handleTileClick(wordIdx) {
+        if (selectedTileIndex === wordIdx) {
+            selectedTileIndex = null;
+        } else {
+            selectedTileIndex = wordIdx;
+        }
+        renderSlide();
+    }
+
+    function handleBlankClick(blankIdx) {
+        const state = slideStates[currentSlide];
+        if (selectedTileIndex !== null) {
+            state.userChoices[blankIdx] = selectedTileIndex;
+            selectedTileIndex = null;
+            renderSlide();
+        } else if (state.userChoices[blankIdx] !== null) {
+            state.userChoices[blankIdx] = null;
+            renderSlide();
+        }
+    }
+
+    function handleDragStart(e, wordIdx) {
+        e.dataTransfer.setData("text/plain", wordIdx);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add("dragover");
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove("dragover");
+    }
+
+    function handleDrop(e, blankIdx) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("dragover");
+        const wordIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+        if (!isNaN(wordIdx)) {
+            slideStates[currentSlide].userChoices[blankIdx] = wordIdx;
+            selectedTileIndex = null;
+            renderSlide();
+        }
+    }
+
+    function checkSlide() {
+        const slide = slidesData[currentSlide];
+        const state = slideStates[currentSlide];
+        const expected = [...slide.qAnswers, ...slide.aAnswers];
+        const dropzones = document.querySelectorAll(".dropzone");
+        let correctCount = 0;
+
+        dropzones.forEach((dz, idx) => {
+            dz.classList.remove("correct", "incorrect");
+            const wordIdx = state.userChoices[idx];
+            const userWord = wordIdx !== null ? state.words[wordIdx] : "";
+            if (userWord === expected[idx]) {
+                dz.classList.add("correct");
+                correctCount++;
+            } else {
+                dz.classList.add("incorrect");
+            }
+        });
+
+        const feedback = document.getElementById("feedback");
+        if (correctCount === expected.length) {
+            feedback.style.color = "#2f855a";
+            feedback.innerText = "Correct! Great job!";
+            state.completed = true;
+            renderDots();
+        } else {
+            feedback.style.color = "#c53030";
+            feedback.innerText = `You got ${correctCount} out of ${expected.length} correct. Try again!`;
+        }
+    }
+
+    function resetSlide() {
+        const state = slideStates[currentSlide];
+        state.userChoices.fill(null);
+        selectedTileIndex = null;
+        renderSlide();
+    }
+
+    function changeSlide(direction) {
+        const nextIdx = currentSlide + direction;
+        if (nextIdx >= 0 && nextIdx < slidesData.length) {
+            currentSlide = nextIdx;
+            selectedTileIndex = null;
+            renderDots();
+            renderSlide();
+        }
+    }
+
+    init();
+</script>
+
+</body>
+</html>
