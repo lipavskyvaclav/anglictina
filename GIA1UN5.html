@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technologie a 2. stupeň přídavných jmen – Procvičení</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Rounded, SVP-friendly font from Google Fonts with clean fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Nunito', 'Quicksand', 'Segoe UI', 'Arial', 'sans-serif'],
+          },
+          colors: {
+            pastelBg: '#eef7fb',
+            creamCard: '#fffdf9',
+            ruleTeal: '#2a9d8f',
+            ruleOrange: '#e76f51',
+            rulePurple: '#7b5ea7',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background-color: #eef7fb;
+      font-family: 'Nunito', 'Quicksand', 'Segoe UI', Arial, sans-serif;
+      line-height: 1.6;
+      letter-spacing: 0.015em;
+      color: #1e293b;
+    }
+
+    /* Gentle animations for SVP-friendly feedback */
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    .animate-gentle-shake {
+      animation: gentleShake 0.35s ease-in-out;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0.6; }
+      60% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop-in {
+      animation: popIn 0.28s ease-out;
+    }
+
+    /* Selected item glow for click-to-place mode */
+    .chip-selected {
+      box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.35);
+      transform: translateY(-2px) scale(1.03);
+      border-color: #2a9d8f !important;
+      background-color: #ecfdf5 !important;
+    }
+
+    /* Drag-over target highlight */
+    .drop-active {
+      box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.35);
+      transform: scale(1.015);
+    }
+
+    /* Smooth button focus */
+    button:focus-visible {
+      outline: 3px solid #2a9d8f;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- TOP HEADER & NAVIGATION -->
+  <header class="bg-white/95 backdrop-blur border-b border-sky-100 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3">
+      <!-- Top Row: Title, Progress, Cheat Sheet Button -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-[#2a9d8f]/15 text-[#2a9d8f] flex items-center justify-center text-2xl shrink-0" aria-hidden="true">
+            💻
+          </div>
+          <div>
+            <h1 class="text-lg sm:text-xl font-extrabold text-slate-800 leading-tight">
+              Technologie &amp; 2. stupeň
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 font-semibold">
+              Odpočinkové klikací procvičení (bez psaní)
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Gentle Star Progress Indicator -->
+          <div class="flex items-center gap-2 bg-[#eef7fb] border border-sky-200 px-3 py-1.5 rounded-2xl" aria-label="Postup procvičení">
+            <span class="text-lg" aria-hidden="true">⭐</span>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1.5">
+                <span id="star-count-text" class="text-sm font-extrabold text-slate-700">0 / 4 cvičení</span>
+              </div>
+              <div class="w-24 sm:w-28 h-2 bg-sky-100 rounded-full overflow-hidden mt-0.5">
+                <div id="global-progress-bar" class="h-full bg-[#2a9d8f] rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Persistent Cheat Sheet Button -->
+          <button
+            type="button"
+            onclick="openCheatSheet()"
+            class="flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 active:scale-95 text-amber-900 font-extrabold px-3.5 py-2.5 rounded-2xl border-2 border-amber-300 shadow-sm transition text-sm sm:text-base cursor-pointer"
+          >
+            <span aria-hidden="true">💡</span>
+            <span>Tahák</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Activity Navigation Tabs -->
+      <nav class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3" aria-label="Výběr cvičení">
+        <button id="tab-btn-1" type="button" onclick="switchTab(1)" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-bold text-sm sm:text-base border-2 transition cursor-pointer">
+          <span class="w-6 h-6 rounded-full bg-white/80 text-slate-700 flex items-center justify-center text-xs font-extrabold shrink-0">1</span>
+          <span class="truncate">Technologie</span>
+          <span id="tab-check-1" class="hidden text-emerald-600 font-extrabold">✓</span>
+        </button>
+
+        <button id="tab-btn-2" type="button" onclick="switchTab(2)" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-bold text-sm sm:text-base border-2 transition cursor-pointer">
+          <span class="w-6 h-6 rounded-full bg-white/80 text-slate-700 flex items-center justify-center text-xs font-extrabold shrink-0">2</span>
+          <span class="truncate">Protiklady</span>
+          <span id="tab-check-2" class="hidden text-emerald-600 font-extrabold">✓</span>
+        </button>
+
+        <button id="tab-btn-3" type="button" onclick="switchTab(3)" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-bold text-sm sm:text-base border-2 transition cursor-pointer">
+          <span class="w-6 h-6 rounded-full bg-white/80 text-slate-700 flex items-center justify-center text-xs font-extrabold shrink-0">3</span>
+          <span class="truncate">Roztřiď 2. st.</span>
+          <span id="tab-check-3" class="hidden text-emerald-600 font-extrabold">✓</span>
+        </button>
+
+        <button id="tab-btn-4" type="button" onclick="switchTab(4)" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-bold text-sm sm:text-base border-2 transition cursor-pointer">
+          <span class="w-6 h-6 rounded-full bg-white/80 text-slate-700 flex items-center justify-center text-xs font-extrabold shrink-0">4</span>
+          <span class="truncate">Vyber slovo</span>
+          <span id="tab-check-4" class="hidden text-emerald-600 font-extrabold">✓</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- GENTLE FLOATING FEEDBACK TOAST -->
+  <div id="feedback-toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 pointer-events-none opacity-0 transition-all duration-300 translate-y-3">
+    <div id="feedback-toast-inner" class="px-5 py-3 rounded-2xl shadow-lg border-2 font-bold text-base flex items-center gap-2.5 bg-white">
+      <span id="feedback-toast-icon" class="text-xl">🌟</span>
+      <span id="feedback-toast-text">Skvělá práce!</span>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- GRAND CELEBRATION BANNER (shown when all 4 activities are done) -->
+    <section id="grand-celebration" class="hidden bg-gradient-to-r from-emerald-50 via-amber-50 to-sky-50 border-2 border-emerald-300 rounded-3xl p-6 text-center shadow-md animate-pop-in">
+      <div class="text-5xl mb-2" aria-hidden="true">🎉 ⭐ 🏆 ⭐ 🎉</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-900 mb-2">
+        Úžasná práce! Zvládl/a jsi všechno!
+      </h2>
+      <p class="text-base sm:text-lg text-slate-700 max-w-xl mx-auto mb-5">
+        Máš hotová všechna 4 cvičení a získáváš všechny 4 zlaté hvězdičky. Teď už ti technologie i 2. stupeň přídavných jmen půjdou skvěle!
+      </p>
+      <button
+        type="button"
+        onclick="resetAllActivities()"
+        class="bg-[#2a9d8f] hover:bg-[#22867a] active:scale-95 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md transition text-base sm:text-lg cursor-pointer"
+      >
+        🔄 Hrát znovu od začátku
+      </button>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ACTIVITY 1: TECHNOLOGY MATCHING                           -->
+    <!-- ========================================================= -->
+    <section id="activity-1" class="activity-section space-y-5">
+      <div class="bg-[#fffdf9] rounded-3xl p-5 sm:p-6 shadow-sm border border-sky-100">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <span class="inline-block bg-[#2a9d8f]/15 text-[#2a9d8f] font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-1.5">
+              Cvičení 1 ze 4
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+              1. Technologie (Přiřaď slova)
+            </h2>
+            <p class="text-slate-600 text-base mt-1">
+              <strong>Přetáhni</strong> anglické slovo na správný obrázek, nebo <strong>klikni na slovo a pak klikni na obrázek</strong>.
+            </p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 px-3.5 py-2 rounded-2xl text-sm font-extrabold text-sky-900">
+            Hotovo: <span id="act1-counter">0</span> / 8
+          </div>
+        </div>
+
+        <!-- Word Bank -->
+        <div class="mt-5 p-4 bg-[#eef7fb] rounded-2xl border-2 border-dashed border-sky-200">
+          <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">
+            Nabídka slov (klikni nebo přetáhni):
+          </p>
+          <div id="act1-word-bank" class="flex flex-wrap gap-2.5 min-h-[52px] items-center">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- 8 Technology Cards Grid -->
+        <div id="act1-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Activity 1 Complete Banner -->
+        <div id="act1-complete" class="hidden mt-6 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 animate-pop-in">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl" aria-hidden="true">⭐</span>
+            <div>
+              <p class="font-extrabold text-emerald-900 text-lg">Výborně! Všechna slova jsou správně!</p>
+              <p class="text-emerald-800 text-sm">Můžeš si je ještě projít nebo jít dál.</p>
+            </div>
+          </div>
+          <button type="button" onclick="switchTab(2)" class="bg-[#2a9d8f] hover:bg-[#22867a] text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-sm transition cursor-pointer">
+            Další cvičení →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ACTIVITY 2: OPPOSITE ADJECTIVES (CLICK TO MATCH)          -->
+    <!-- ========================================================= -->
+    <section id="activity-2" class="activity-section hidden space-y-5">
+      <div class="bg-[#fffdf9] rounded-3xl p-5 sm:p-6 shadow-sm border border-sky-100">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <span class="inline-block bg-[#2a9d8f]/15 text-[#2a9d8f] font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-1.5">
+              Cvičení 2 ze 4
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+              2. Protiklady (Najdi dvojice)
+            </h2>
+            <p class="text-slate-600 text-base mt-1">
+              Klikni na jedno slovo v <strong>levém sloupci</strong> a pak na jeho <strong>opak v pravém sloupci</strong>.
+            </p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 px-3.5 py-2 rounded-2xl text-sm font-extrabold text-sky-900">
+            Dvojice: <span id="act2-counter">0</span> / 6
+          </div>
+        </div>
+
+        <!-- Two Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+          <!-- Left Column -->
+          <div class="bg-teal-50/60 border-2 border-teal-200/80 rounded-2xl p-4">
+            <p class="text-sm font-extrabold text-[#2a9d8f] uppercase tracking-wider mb-3 text-center">
+              Sloupec A
+            </p>
+            <div id="act2-left" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="bg-orange-50/60 border-2 border-orange-200/80 rounded-2xl p-4">
+            <p class="text-sm font-extrabold text-[#e76f51] uppercase tracking-wider mb-3 text-center">
+              Sloupec B (Opaky)
+            </p>
+            <div id="act2-right" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 2 Complete Banner -->
+        <div id="act2-complete" class="hidden mt-6 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 animate-pop-in">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl" aria-hidden="true">⭐</span>
+            <div>
+              <p class="font-extrabold text-emerald-900 text-lg">Skvělá práce! Všechny protiklady sedí!</p>
+              <p class="text-emerald-800 text-sm">Získal/a jsi druhou hvězdičku. Jdeme na 2. stupeň!</p>
+            </div>
+          </div>
+          <button type="button" onclick="switchTab(3)" class="bg-[#2a9d8f] hover:bg-[#22867a] text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-sm transition cursor-pointer">
+            Další cvičení →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ACTIVITY 3: SORT COMPARATIVE ADJECTIVES                   -->
+    <!-- ========================================================= -->
+    <section id="activity-3" class="activity-section hidden space-y-5">
+      <div class="bg-[#fffdf9] rounded-3xl p-5 sm:p-6 shadow-sm border border-sky-100">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <span class="inline-block bg-[#7b5ea7]/15 text-[#7b5ea7] font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-1.5">
+              Cvičení 3 ze 4
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+              3. Roztřiď 2. stupeň (Přesuň nebo klikni)
+            </h2>
+            <p class="text-slate-600 text-base mt-1">
+              Roztřiď slovíčka do správného barevného boxu. <strong>Přetáhni</strong> kartičku nebo <strong>klikni na kartičku a pak na box</strong>.
+            </p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 px-3.5 py-2 rounded-2xl text-sm font-extrabold text-sky-900">
+            Roztříděno: <span id="act3-counter">0</span> / 11
+          </div>
+        </div>
+
+        <!-- Word Bank for Sorting -->
+        <div class="mt-5 p-4 bg-[#eef7fb] rounded-2xl border-2 border-dashed border-sky-200">
+          <p class="text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-3">
+            Kartičky k roztřídění (v závorce je základní tvar):
+          </p>
+          <div id="act3-word-bank" class="flex flex-wrap gap-2.5 min-h-[54px] items-center">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- 3 Color-Coded Drop Zones -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5">
+          <!-- Zone 1: Teal (-er) -->
+          <div
+            id="zone-er"
+            data-zone="er"
+            onclick="handleZoneClick('er')"
+            ondragover="handleDragOver(event, this)"
+            ondragleave="handleDragLeave(this)"
+            ondrop="handleZoneDrop(event, 'er', this)"
+            class="drop-zone bg-teal-50/70 border-2 border-[#2a9d8f] rounded-3xl p-4 min-h-[210px] flex flex-col transition cursor-pointer hover:bg-teal-50"
+          >
+            <div class="flex items-center gap-2 pb-2.5 mb-3 border-b-2 border-[#2a9d8f]/25">
+              <span class="w-8 h-8 rounded-xl bg-[#2a9d8f] text-white font-extrabold flex items-center justify-center text-sm shrink-0">-er</span>
+              <h3 class="font-extrabold text-[#1f7a6f] text-base leading-snug">
+                Koncovka -er / -ier / zdvojení
+              </h3>
+            </div>
+            <div id="zone-er-items" class="flex flex-wrap gap-2 content-start flex-1">
+              <p class="zone-placeholder text-sm text-[#2a9d8f]/70 font-semibold italic">Sem patří krátká slova...</p>
+            </div>
+          </div>
+
+          <!-- Zone 2: Orange (more) -->
+          <div
+            id="zone-more"
+            data-zone="more"
+            onclick="handleZoneClick('more')"
+            ondragover="handleDragOver(event, this)"
+            ondragleave="handleDragLeave(this)"
+            ondrop="handleZoneDrop(event, 'more', this)"
+            class="drop-zone bg-orange-50/70 border-2 border-[#e76f51] rounded-3xl p-4 min-h-[210px] flex flex-col transition cursor-pointer hover:bg-orange-50"
+          >
+            <div class="flex items-center gap-2 pb-2.5 mb-3 border-b-2 border-[#e76f51]/25">
+              <span class="px-2 h-8 rounded-xl bg-[#e76f51] text-white font-extrabold flex items-center justify-center text-xs shrink-0">more</span>
+              <h3 class="font-extrabold text-[#c45135] text-base leading-snug">
+                Slovo MORE + přídavné jméno
+              </h3>
+            </div>
+            <div id="zone-more-items" class="flex flex-wrap gap-2 content-start flex-1">
+              <p class="zone-placeholder text-sm text-[#e76f51]/70 font-semibold italic">Sem patří dlouhá slova...</p>
+            </div>
+          </div>
+
+          <!-- Zone 3: Purple (irregular) -->
+          <div
+            id="zone-irregular"
+            data-zone="irregular"
+            onclick="handleZoneClick('irregular')"
+            ondragover="handleDragOver(event, this)"
+            ondragleave="handleDragLeave(this)"
+            ondrop="handleZoneDrop(event, 'irregular', this)"
+            class="drop-zone bg-purple-50/70 border-2 border-[#7b5ea7] rounded-3xl p-4 min-h-[210px] flex flex-col transition cursor-pointer hover:bg-purple-50"
+          >
+            <div class="flex items-center gap-2 pb-2.5 mb-3 border-b-2 border-[#7b5ea7]/25">
+              <span class="w-8 h-8 rounded-xl bg-[#7b5ea7] text-white font-extrabold flex items-center justify-center text-sm shrink-0">★</span>
+              <h3 class="font-extrabold text-[#5e4287] text-base leading-snug">
+                Nepravidelné (úplně jiné slovo)
+              </h3>
+            </div>
+            <div id="zone-irregular-items" class="flex flex-wrap gap-2 content-start flex-1">
+              <p class="zone-placeholder text-sm text-[#7b5ea7]/70 font-semibold italic">Sem patří výjimky...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 3 Complete Banner -->
+        <div id="act3-complete" class="hidden mt-6 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 animate-pop-in">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl" aria-hidden="true">⭐</span>
+            <div>
+              <p class="font-extrabold text-emerald-900 text-lg">Paráda! Všechna slova jsou ve správné skupině!</p>
+              <p class="text-emerald-800 text-sm">Zbývá už jen poslední lehké cvičení.</p>
+            </div>
+          </div>
+          <button type="button" onclick="switchTab(4)" class="bg-[#2a9d8f] hover:bg-[#22867a] text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-sm transition cursor-pointer">
+            Další cvičení →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- ACTIVITY 4: CLICKABLE PILL CHOICES IN SHORT TEXTS         -->
+    <!-- ========================================================= -->
+    <section id="activity-4" class="activity-section hidden space-y-5">
+      <div class="bg-[#fffdf9] rounded-3xl p-5 sm:p-6 shadow-sm border border-sky-100">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <span class="inline-block bg-[#e76f51]/15 text-[#e76f51] font-extrabold text-xs uppercase tracking-wider px-3 py-1 rounded-full mb-1.5">
+              Cvičení 4 ze 4
+            </span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">
+              4. Vyber správné slovo (Krátké texty)
+            </h2>
+            <p class="text-slate-600 text-base mt-1">
+              V každé větě <strong>klikni na správné slovo</strong> v rámečku.
+            </p>
+          </div>
+          <div class="bg-sky-50 border border-sky-200 px-3.5 py-2 rounded-2xl text-sm font-extrabold text-sky-900">
+            Vybráno: <span id="act4-counter">0</span> / 11
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
+          <!-- Card A: New Phone -->
+          <div class="bg-white border-2 border-sky-200 rounded-3xl p-5 shadow-sm flex flex-col">
+            <div class="flex items-center gap-3 pb-3 mb-4 border-b border-sky-100">
+              <span class="w-10 h-10 rounded-2xl bg-sky-100 text-2xl flex items-center justify-center shrink-0" aria-hidden="true">📱</span>
+              <div>
+                <h3 class="font-extrabold text-lg text-slate-800">Nový mobil (Archie &amp; Lou)</h3>
+                <p class="text-xs font-bold text-slate-500">Vyber vhodné přídavné jméno</p>
+              </div>
+            </div>
+            <div id="act4-card-a" class="space-y-4 text-base sm:text-lg leading-relaxed">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Card B: Ads (Camera & Cinema) -->
+          <div class="bg-white border-2 border-orange-200 rounded-3xl p-5 shadow-sm flex flex-col">
+            <div class="flex items-center gap-3 pb-3 mb-4 border-b border-orange-100">
+              <span class="w-10 h-10 rounded-2xl bg-orange-100 text-2xl flex items-center justify-center shrink-0" aria-hidden="true">📸</span>
+              <div>
+                <h3 class="font-extrabold text-lg text-slate-800">Reklama: Foťák &amp; Kino</h3>
+                <p class="text-xs font-bold text-slate-500">Vyber správný 2. stupeň</p>
+              </div>
+            </div>
+            <div id="act4-card-b" class="space-y-4 text-base sm:text-lg leading-relaxed">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity 4 Complete Banner -->
+        <div id="act4-complete" class="hidden mt-6 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 animate-pop-in">
+          <div class="flex items-center gap-3">
+            <span class="text-3xl" aria-hidden="true">⭐</span>
+            <div>
+              <p class="font-extrabold text-emerald-900 text-lg">Skvěle! Všechna slova v textech jsou správně!</p>
+              <p id="act4-complete-sub" class="text-emerald-800 text-sm">Výborná práce!</p>
+            </div>
+          </div>
+          <button type="button" onclick="scrollToTopAndCheck()" class="bg-[#2a9d8f] hover:bg-[#22867a] text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-sm transition cursor-pointer">
+            Zobrazit celkový výsledek 🎉
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="text-center py-4 px-4 text-xs sm:text-sm text-slate-500">
+    <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <span>Anglický jazyk · 7. ročník · Technologie &amp; 2. stupeň přídavných jmen</span>
+      <button type="button" onclick="resetAllActivities()" class="text-slate-500 hover:text-slate-800 underline font-semibold cursor-pointer">
+        Začít všechna cvičení znovu
+      </button>
+    </div>
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- CHEAT SHEET MODAL (💡 TAHÁK)                              -->
+  <!-- ========================================================= -->
+  <div
+    id="cheat-sheet-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/45 backdrop-blur-xs p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cheat-sheet-title"
+    onclick="if(event.target === this) closeCheatSheet()"
+  >
+    <div class="bg-[#fffdf9] w-full max-w-2xl rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden animate-pop-in max-h-[90vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="bg-amber-100/90 px-6 py-4 flex items-center justify-between border-b border-amber-200">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl" aria-hidden="true">💡</span>
+          <h2 id="cheat-sheet-title" class="text-xl font-extrabold text-amber-950">
+            Tahák: 2. stupeň přídavných jmen
+          </h2>
+        </div>
+        <button
+          type="button"
+          onclick="closeCheatSheet()"
+          class="w-10 h-10 rounded-2xl bg-white hover:bg-amber-50 text-amber-900 font-extrabold text-xl flex items-center justify-center border border-amber-300 cursor-pointer"
+          aria-label="Zavřít tahák"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="p-5 sm:p-6 space-y-4 overflow-y-auto">
+        <!-- Rule 1: Teal -->
+        <div class="bg-teal-50 border-l-8 border-[#2a9d8f] rounded-2xl p-4">
+          <h3 class="font-extrabold text-[#1f7a6f] text-lg mb-1.5">
+            1. Krátká slova: přidáme <span class="bg-[#2a9d8f] text-white px-2 py-0.5 rounded-lg">-er</span>
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-base font-bold text-slate-700 mt-2">
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-teal-100">
+              <span>clean → <span class="text-[#2a9d8f]">cleaner</span></span>
+            </div>
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-teal-100">
+              <span>hot → <span class="text-[#2a9d8f]">hotter</span></span>
+            </div>
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-teal-100">
+              <span>easy → <span class="text-[#2a9d8f]">easier</span></span>
+            </div>
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-teal-100">
+              <span>thin → <span class="text-[#2a9d8f]">thinner</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 2: Orange -->
+        <div class="bg-orange-50 border-l-8 border-[#e76f51] rounded-2xl p-4">
+          <h3 class="font-extrabold text-[#c45135] text-lg mb-1.5">
+            2. Dlouhá slova: <span class="bg-[#e76f51] text-white px-2 py-0.5 rounded-lg">more</span> + slovo
+          </h3>
+          <div class="flex flex-wrap gap-2 text-base font-bold text-slate-700 mt-2">
+            <span class="bg-white rounded-xl px-3 py-2 border border-orange-100 flex items-center gap-2">
+              <span><span class="text-[#e76f51]">more</span> interesting</span>
+            </span>
+            <span class="bg-white rounded-xl px-3 py-2 border border-orange-100 flex items-center gap-2">
+              <span><span class="text-[#e76f51]">more</span> dangerous</span>
+            </span>
+            <span class="bg-white rounded-xl px-3 py-2 border border-orange-100 flex items-center gap-2">
+              <span><span class="text-[#e76f51]">more</span> modern</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Rule 3: Purple -->
+        <div class="bg-purple-50 border-l-8 border-[#7b5ea7] rounded-2xl p-4">
+          <h3 class="font-extrabold text-[#5e4287] text-lg mb-1.5">
+            3. Nepravidelná slova (úplně jiné slovo)
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-base font-bold text-slate-700 mt-2">
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-purple-100">
+              <span>good → <span class="text-[#7b5ea7]">better</span> <span class="text-slate-500 font-semibold">(lepší)</span></span>
+            </div>
+            <div class="bg-white rounded-xl px-3 py-2 flex items-center justify-between border border-purple-100">
+              <span>bad → <span class="text-[#7b5ea7]">worse</span> <span class="text-slate-500 font-semibold">(horší)</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 4: Than -->
+        <div class="bg-amber-50 border-l-8 border-amber-500 rounded-2xl p-4">
+          <h3 class="font-extrabold text-amber-900 text-lg">
+            4. Porovnání: <span class="bg-[#e76f51] text-white px-2 py-0.5 rounded-lg">than</span> (= než)
+          </h3>
+          <p class="text-slate-700 font-semibold mt-1">
+            Píšeme vždy za 2. stupněm: <em>smaller <strong class="text-[#e76f51]">than</strong></em>, <em>more modern <strong class="text-[#e76f51]">than</strong></em>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <button
+          type="button"
+          onclick="closeCheatSheet()"
+          class="bg-[#2a9d8f] hover:bg-[#22867a] text-white font-extrabold px-6 py-2.5 rounded-2xl shadow-sm transition cursor-pointer"
+        >
+          Rozumím, zpět ke cvičení 👍
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- JAVASCRIPT LOGIC                                          -->
+  <!-- ========================================================= -->
+  <script>
+    'use strict';
+
+    // =========================================================
+    // 1. DATA DEFINITIONS (Strictly based on the worksheet)
+    // =========================================================
+
+    const TECH_ITEMS = [
+      {
+        id: 'camera',
+        word: 'camera',
+        clue: 'fotí fotky',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="18" width="48" height="34" rx="7" fill="#e6f7f5"/>
+          <path d="M22 18l4-7h12l4 7" fill="#bcebe5"/>
+          <circle cx="32" cy="35" r="10" fill="#ffffff"/>
+          <circle cx="32" cy="35" r="5" fill="#2a9d8f" opacity="0.25"/>
+          <circle cx="47" cy="25" r="2" fill="#e76f51" stroke="none"/>
+        </svg>`
+      },
+      {
+        id: 'tablet',
+        word: 'tablet',
+        clue: 'dotyková obrazovka na cesty',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="13" y="8" width="38" height="48" rx="6" fill="#e6f7f5"/>
+          <rect x="18" y="14" width="28" height="34" rx="2" fill="#ffffff"/>
+          <circle cx="32" cy="52" r="1.8" fill="#2a9d8f" stroke="none"/>
+          <path d="M24 24h16M24 31h10" stroke="#7b5ea7" stroke-width="2.2"/>
+        </svg>`
+      },
+      {
+        id: 'speaker',
+        word: 'speaker',
+        clue: 'přehrává hudbu',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="10" y="22" width="44" height="24" rx="12" fill="#e6f7f5"/>
+          <circle cx="23" cy="34" r="6" fill="#ffffff"/>
+          <circle cx="41" cy="34" r="6" fill="#ffffff"/>
+          <path d="M24 14c4-3 12-3 16 0" stroke="#e76f51" stroke-width="2.4"/>
+          <path d="M28 18c2-1.5 6-1.5 8 0" stroke="#e76f51" stroke-width="2.4"/>
+        </svg>`
+      },
+      {
+        id: 'keyboard',
+        word: 'keyboard',
+        clue: 'píšeme na ní písmena',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="18" width="52" height="28" rx="5" fill="#e6f7f5"/>
+          <rect x="12" y="24" width="6" height="5" rx="1" fill="#ffffff"/>
+          <rect x="21" y="24" width="6" height="5" rx="1" fill="#ffffff"/>
+          <rect x="30" y="24" width="6" height="5" rx="1" fill="#ffffff"/>
+          <rect x="39" y="24" width="6" height="5" rx="1" fill="#ffffff"/>
+          <rect x="48" y="24" width="4" height="5" rx="1" fill="#ffffff"/>
+          <rect x="12" y="33" width="8" height="5" rx="1" fill="#ffffff"/>
+          <rect x="23" y="33" width="18" height="5" rx="1" fill="#ffffff"/>
+          <rect x="44" y="33" width="8" height="5" rx="1" fill="#ffffff"/>
+        </svg>`
+      },
+      {
+        id: 'screen',
+        word: 'screen',
+        clue: 'díváme se na ni',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="11" width="48" height="33" rx="4" fill="#e6f7f5"/>
+          <rect x="12" y="15" width="40" height="25" rx="2" fill="#ffffff"/>
+          <path d="M26 44l-2 9h16l-2-9" fill="#bcebe5"/>
+          <path d="M20 53h24"/>
+          <circle cx="24" cy="24" r="3" fill="#e76f51" stroke="none"/>
+          <path d="M16 36l9-8 7 6 6-5 8 7" stroke="#2a9d8f" stroke-width="2"/>
+        </svg>`
+      },
+      {
+        id: 'laptop',
+        word: 'laptop',
+        clue: 'přenosný počítač',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="13" y="14" width="38" height="26" rx="3" fill="#e6f7f5"/>
+          <rect x="17" y="18" width="30" height="18" rx="1.5" fill="#ffffff"/>
+          <path d="M8 40h48l-4 10H12l-4-10z" fill="#bcebe5"/>
+          <path d="M27 45h10" stroke="#2a9d8f" stroke-width="2.5"/>
+        </svg>`
+      },
+      {
+        id: 'touchpad',
+        word: 'touchpad',
+        clue: 'ovládání prstem místo myši',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="8" y="14" width="48" height="36" rx="5" fill="#e6f7f5"/>
+          <rect x="16" y="21" width="32" height="22" rx="3" fill="#ffffff"/>
+          <path d="M32 37v6" stroke="#2a9d8f" stroke-width="2"/>
+          <circle cx="32" cy="30" r="4" fill="#e76f51" opacity="0.3" stroke="#e76f51"/>
+          <path d="M35 32l8 8" stroke="#e76f51" stroke-width="2.5"/>
+        </svg>`
+      },
+      {
+        id: 'charger',
+        word: 'charger',
+        clue: 'nabíjí baterii',
+        svg: `<svg viewBox="0 0 64 64" class="w-16 h-16 mx-auto" fill="none" stroke="#2a9d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 10v9M29 10v9"/>
+          <rect x="14" y="19" width="20" height="16" rx="4" fill="#e6f7f5"/>
+          <path d="M24 35v7c0 6 4 10 10 10h6c5 0 9-4 9-9V26"/>
+          <rect x="44" y="18" width="10" height="8" rx="2" fill="#bcebe5"/>
+          <path d="M25 23l-3 5h4l-2 4" stroke="#e76f51" stroke-width="2.2"/>
+        </svg>`
+      }
+    ];
+
+    const OPPOSITE_PAIRS = [
+      { id: 'p1', left: 'cheap', leftCz: 'levný', right: 'expensive', rightCz: 'drahý' },
+      { id: 'p2', left: 'easy', leftCz: 'lehký / snadný', right: 'difficult', rightCz: 'těžký / složitý' },
+      { id: 'p3', left: 'fast', leftCz: 'rychlý', right: 'slow', rightCz: 'pomalý' },
+      { id: 'p4', left: 'light', leftCz: 'lehký na váhu', right: 'heavy', rightCz: 'těžký na váhu' },
+      { id: 'p5', left: 'good', leftCz: 'dobrý', right: 'bad', rightCz: 'špatný' },
+      { id: 'p6', left: 'big', leftCz: 'velký', right: 'small', rightCz: 'malý' }
+    ];
+
+    const SORT_ITEMS = [
+      { id: 's1', word: 'cleaner', base: 'clean', zone: 'er' },
+      { id: 's2', word: 'younger', base: 'young', zone: 'er' },
+      { id: 's3', word: 'hotter', base: 'hot', zone: 'er' },
+      { id: 's4', word: 'uglier', base: 'ugly', zone: 'er' },
+      { id: 's5', word: 'thinner', base: 'thin', zone: 'er' },
+      { id: 's6', word: 'easier', base: 'easy', zone: 'er' },
+      { id: 's7', word: 'more dangerous', base: 'dangerous', zone: 'more' },
+      { id: 's8', word: 'more interesting', base: 'interesting', zone: 'more' },
+      { id: 's9', word: 'more modern', base: 'modern', zone: 'more' },
+      { id: 's10', word: 'better', base: 'good', zone: 'irregular' },
+      { id: 's11', word: 'worse', base: 'bad', zone: 'irregular' }
+    ];
+
+    const TEXT_CARD_A = [
+      {
+        id: 'a1',
+        speaker: 'Archie:',
+        parts: ['Is that your ', { gapId: 'g1', options: ['new', 'easy'], answer: 'new' }, ' phone?'],
+        fullSentence: 'Is that your new phone?'
+      },
+      {
+        id: 'a2',
+        speaker: 'Archie:',
+        parts: ['Wow – it’s very ', { gapId: 'g2', options: ['light', 'slow'], answer: 'light' }, '! It’s only 113 grams.'],
+        fullSentence: "Wow, it's very light! It's only 113 grams."
+      },
+      {
+        id: 'a3',
+        speaker: 'Lou:',
+        parts: ['It’s very ', { gapId: 'g3', options: ['fast', 'difficult'], answer: 'fast' }, ' too. My old phone is very slow.'],
+        fullSentence: "It's very fast too. My old phone is very slow."
+      },
+      {
+        id: 'a4',
+        speaker: 'Archie:',
+        parts: ['Is the new phone very ', { gapId: 'g4', options: ['expensive', 'cheap'], answer: 'expensive' }, '?'],
+        fullSentence: 'Is the new phone very expensive?'
+      }
+    ];
+
+    const TEXT_CARD_B = [
+      {
+        id: 'b1',
+        badge: '1',
+        parts: ['The EasyPic 101 is ', { gapId: 'g5', options: ['smaller', 'more small'], answer: 'smaller' }, ' than your old camera.'],
+        fullSentence: 'The EasyPic 101 is smaller than your old camera.'
+      },
+      {
+        id: 'b2',
+        badge: '2',
+        parts: [
+          'It is ',
+          { gapId: 'g6', options: ['lighter', 'more light'], answer: 'lighter' },
+          ' and ',
+          { gapId: 'g7', options: ['easier', 'more easy'], answer: 'easier' },
+          ' to use.'
+        ],
+        fullSentence: 'It is lighter and easier to use.'
+      },
+      {
+        id: 'b3',
+        badge: '3',
+        parts: ['It takes ', { gapId: 'g8', options: ['better', 'gooder'], answer: 'better' }, ' pictures!'],
+        fullSentence: 'It takes better pictures!'
+      },
+      {
+        id: 'b4',
+        badge: '4',
+        parts: [
+          'The new Megaplex cinema is ',
+          { gapId: 'g9', options: ['bigger', 'biger'], answer: 'bigger' },
+          ' and ',
+          { gapId: 'g10', options: ['more modern', 'moderner'], answer: 'more modern' },
+          ' than the old cinema.'
+        ],
+        fullSentence: 'The new Megaplex cinema is bigger and more modern than the old cinema.'
+      },
+      {
+        id: 'b5',
+        badge: '5',
+        parts: ['This week it’s ', { gapId: 'g11', options: ['cheaper', 'more cheap'], answer: 'cheaper' }, ' too!'],
+        fullSentence: "This week it's cheaper too!"
+      }
+    ];
+
+    // Encouraging Czech messages
+    const POSITIVE_MSGS = ['Skvělá práce!', 'Výborně!', 'Super!', 'Přesně tak!', 'Jde ti to parádně!'];
+    const RETRY_MSGS = ['Zkus to ještě jednou, zvládneš to!', 'Nevadí, zkus jinou možnost!', 'Skoro! Zkus to znovu.'];
+
+    // =========================================================
+    // 2. APPLICATION STATE
+    // =========================================================
+
+    let state = {
+      activeTab: 1,
+      completed: { 1: false, 2: false, 3: false, 4: false },
+      // Activity 1
+      act1Matched: new Set(),
+      act1SelectedWord: null,
+      // Activity 2
+      act2Matched: new Set(),
+      act2SelectedLeft: null,
+      act2SelectedRight: null,
+      act2LeftOrder: [],
+      act2RightOrder: [],
+      // Activity 3
+      act3Placed: {}, // { itemId: zone }
+      act3SelectedId: null,
+      act3Order: [],
+      // Activity 4
+      act4Solved: new Set()
+    };
+
+    let toastTimer = null;
+
+    // =========================================================
+    // 3. UTILITIES (Shuffle, Toast, Progress)
+    // =========================================================
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function pickRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function showToast(type, customText) {
+      const toast = document.getElementById('feedback-toast');
+      const inner = document.getElementById('feedback-toast-inner');
+      const icon = document.getElementById('feedback-toast-icon');
+      const text = document.getElementById('feedback-toast-text');
+
+      if (type === 'success') {
+        inner.className = 'px-5 py-3 rounded-2xl shadow-lg border-2 font-bold text-base flex items-center gap-2.5 bg-emerald-50 border-emerald-400 text-emerald-900';
+        icon.textContent = '🌟';
+        text.textContent = customText || pickRandom(POSITIVE_MSGS);
+      } else {
+        inner.className = 'px-5 py-3 rounded-2xl shadow-lg border-2 font-bold text-base flex items-center gap-2.5 bg-amber-50 border-amber-400 text-amber-900';
+        icon.textContent = '💡';
+        text.textContent = customText || pickRandom(RETRY_MSGS);
+      }
+
+      toast.classList.remove('opacity-0', 'translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2100);
+    }
+
+    function updateGlobalProgress() {
+      const doneCount = Object.values(state.completed).filter(Boolean).length;
+      document.getElementById('star-count-text').textContent = `${doneCount} / 4 cvičení`;
+      document.getElementById('global-progress-bar').style.width = `${(doneCount / 4) * 100}%`;
+
+      for (let i = 1; i <= 4; i++) {
+        const checkEl = document.getElementById(`tab-check-${i}`);
+        if (state.completed[i]) {
+          checkEl.classList.remove('hidden');
+        } else {
+          checkEl.classList.add('hidden');
+        }
+      }
+
+      const celebration = document.getElementById('grand-celebration');
+      if (doneCount === 4) {
+        celebration.classList.remove('hidden');
+      } else {
+        celebration.classList.add('hidden');
+      }
+    }
+
+    function switchTab(tabNum) {
+      state.activeTab = tabNum;
+      for (let i = 1; i <= 4; i++) {
+        const section = document.getElementById(`activity-${i}`);
+        const btn = document.getElementById(`tab-btn-${i}`);
+        if (i === tabNum) {
+          section.classList.remove('hidden');
+          btn.className = 'tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-extrabold text-sm sm:text-base border-2 transition cursor-pointer bg-[#2a9d8f] text-white border-[#2a9d8f] shadow-sm';
+        } else {
+          section.classList.add('hidden');
+          btn.className = 'tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl font-bold text-sm sm:text-base border-2 transition cursor-pointer bg-sky-50/70 text-slate-700 border-sky-200 hover:bg-sky-100';
+        }
+      }
+    }
+
+    function openCheatSheet() {
+      const modal = document.getElementById('cheat-sheet-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeCheatSheet() {
+      const modal = document.getElementById('cheat-sheet-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function scrollToTopAndCheck() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const doneCount = Object.values(state.completed).filter(Boolean).length;
+      if (doneCount < 4) {
+        showToast('retry', 'Ještě ti zbývá dokončit některé z předchozích cvičení!');
+      }
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCheatSheet();
+    });
+
+    // =========================================================
+    // 4. ACTIVITY 1: TECHNOLOGY MATCHING
+    // =========================================================
+
+    let act1BankOrder = [];
+
+    function renderActivity1() {
+      const bankEl = document.getElementById('act1-word-bank');
+      const gridEl = document.getElementById('act1-grid');
+
+      // Render word bank
+      bankEl.innerHTML = '';
+      const remaining = act1BankOrder.filter(item => !state.act1Matched.has(item.id));
+      if (remaining.length === 0) {
+        bankEl.innerHTML = `<span class="text-emerald-700 font-extrabold text-base">🎉 Všechna slova jsou přiřazena!</span>`;
+      } else {
+        remaining.forEach(item => {
+          const isSelected = state.act1SelectedWord === item.id;
+          const chip = document.createElement('div');
+          chip.draggable = true;
+          chip.dataset.wordId = item.id;
+          chip.className = `inline-flex items-center gap-2 bg-white border-2 border-sky-300 hover:border-[#2a9d8f] px-4 py-2.5 rounded-2xl font-extrabold text-slate-800 text-base shadow-sm cursor-grab active:cursor-grabbing select-none transition ${isSelected ? 'chip-selected' : ''}`;
+          chip.innerHTML = `
+            <span>${item.word}</span>
+          `;
+
+          // Click-to-select
+          chip.addEventListener('click', () => {
+            state.act1SelectedWord = (state.act1SelectedWord === item.id) ? null : item.id;
+            renderActivity1();
+          });
+
+          // Drag start
+          chip.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', item.id);
+            state.act1SelectedWord = item.id;
+          });
+
+          bankEl.appendChild(chip);
+        });
+      }
+
+      // Render 8 cards
+      gridEl.innerHTML = '';
+      TECH_ITEMS.forEach(item => {
+        const matched = state.act1Matched.has(item.id);
+        const card = document.createElement('div');
+        card.id = `tech-card-${item.id}`;
+        card.className = matched
+          ? 'bg-emerald-50 border-2 border-emerald-400 rounded-3xl p-4 flex flex-col items-center text-center shadow-sm transition animate-pop-in'
+          : `bg-white border-2 ${state.act1SelectedWord ? 'border-dashed border-[#2a9d8f] hover:bg-teal-50/40 cursor-pointer' : 'border-sky-200 hover:border-sky-300'} rounded-3xl p-4 flex flex-col items-center text-center shadow-sm transition`;
+
+        card.innerHTML = `
+          <div class="mb-2">${item.svg}</div>
+          <p class="text-sm font-bold text-slate-600 mb-3 min-h-[2.5rem] flex items-center justify-center">${item.clue}</p>
+          ${
+            matched
+              ? `<div class="w-full bg-white border-2 border-emerald-300 rounded-2xl px-3 py-2 flex items-center justify-between gap-2">
+                   <span class="font-extrabold text-emerald-800 text-base flex items-center gap-1.5"><span>✓</span> ${item.word}</span>
+                 </div>`
+              : `<div class="w-full bg-[#eef7fb] border-2 border-dashed border-sky-300 rounded-2xl px-3 py-2 text-sm font-bold text-slate-400">
+                   ${state.act1SelectedWord ? 'Klikni sem 👇' : 'Sem vlož slovo'}
+                 </div>`
+          }
+        `;
+
+        if (!matched) {
+          card.addEventListener('click', () => {
+            if (!state.act1SelectedWord) {
+              showToast('retry', 'Nejdříve klikni na slovo nahoře!');
+              return;
+            }
+            checkAct1Match(state.act1SelectedWord, item.id, card);
+          });
+
+          card.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            card.classList.add('drop-active');
+          });
+          card.addEventListener('dragleave', () => {
+            card.classList.remove('drop-active');
+          });
+          card.addEventListener('drop', (e) => {
+            e.preventDefault();
+            card.classList.remove('drop-active');
+            const draggedWordId = e.dataTransfer.getData('text/plain') || state.act1SelectedWord;
+            if (draggedWordId) {
+              checkAct1Match(draggedWordId, item.id, card);
+            }
+          });
+        }
+
+        gridEl.appendChild(card);
+      });
+
+      document.getElementById('act1-counter').textContent = state.act1Matched.size;
+      if (state.act1Matched.size === TECH_ITEMS.length) {
+        state.completed[1] = true;
+        document.getElementById('act1-complete').classList.remove('hidden');
+        updateGlobalProgress();
+      } else {
+        document.getElementById('act1-complete').classList.add('hidden');
+      }
+    }
+
+    function checkAct1Match(wordId, targetId, cardEl) {
+      if (wordId === targetId) {
+        state.act1Matched.add(targetId);
+        state.act1SelectedWord = null;
+        showToast('success');
+        renderActivity1();
+      } else {
+        cardEl.classList.add('animate-gentle-shake', 'bg-amber-50');
+        setTimeout(() => cardEl.classList.remove('animate-gentle-shake', 'bg-amber-50'), 400);
+        showToast('retry');
+      }
+    }
+
+    // =========================================================
+    // 5. ACTIVITY 2: OPPOSITE ADJECTIVES
+    // =========================================================
+
+    function renderActivity2() {
+      const leftEl = document.getElementById('act2-left');
+      const rightEl = document.getElementById('act2-right');
+
+      leftEl.innerHTML = '';
+      rightEl.innerHTML = '';
+
+      state.act2LeftOrder.forEach(pair => {
+        const isMatched = state.act2Matched.has(pair.id);
+        const isSelected = state.act2SelectedLeft === pair.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.disabled = isMatched;
+        btn.className = isMatched
+          ? 'w-full bg-emerald-50 border-2 border-emerald-400 rounded-2xl px-4 py-3 flex items-center justify-between text-left transition animate-pop-in'
+          : `w-full bg-white border-2 ${isSelected ? 'border-[#2a9d8f] ring-4 ring-[#2a9d8f]/25 scale-[1.01]' : 'border-teal-200 hover:border-[#2a9d8f]'} rounded-2xl px-4 py-3 flex items-center justify-between text-left shadow-sm transition cursor-pointer`;
+
+        btn.innerHTML = `
+          <div>
+            <span class="block font-extrabold text-lg ${isMatched ? 'text-emerald-900' : 'text-slate-800'}">${pair.left}</span>
+            <span class="block text-sm font-semibold ${isMatched ? 'text-emerald-700' : 'text-slate-500'}">${pair.leftCz}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            ${isMatched ? '<span class="text-xl" aria-label="Správně">⭐</span>' : ''}
+          </div>
+        `;
+
+        if (!isMatched) {
+          btn.addEventListener('click', () => {
+            state.act2SelectedLeft = (state.act2SelectedLeft === pair.id) ? null : pair.id;
+            tryMatchAct2();
+          });
+        }
+        leftEl.appendChild(btn);
+      });
+
+      state.act2RightOrder.forEach(pair => {
+        const isMatched = state.act2Matched.has(pair.id);
+        const isSelected = state.act2SelectedRight === pair.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.disabled = isMatched;
+        btn.className = isMatched
+          ? 'w-full bg-emerald-50 border-2 border-emerald-400 rounded-2xl px-4 py-3 flex items-center justify-between text-left transition animate-pop-in'
+          : `w-full bg-white border-2 ${isSelected ? 'border-[#e76f51] ring-4 ring-[#e76f51]/25 scale-[1.01]' : 'border-orange-200 hover:border-[#e76f51]'} rounded-2xl px-4 py-3 flex items-center justify-between text-left shadow-sm transition cursor-pointer`;
+
+        btn.innerHTML = `
+          <div>
+            <span class="block font-extrabold text-lg ${isMatched ? 'text-emerald-900' : 'text-slate-800'}">${pair.right}</span>
+            <span class="block text-sm font-semibold ${isMatched ? 'text-emerald-700' : 'text-slate-500'}">${pair.rightCz}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            ${isMatched ? '<span class="text-xl" aria-label="Správně">⭐</span>' : ''}
+          </div>
+        `;
+
+        if (!isMatched) {
+          btn.addEventListener('click', () => {
+            state.act2SelectedRight = (state.act2SelectedRight === pair.id) ? null : pair.id;
+            tryMatchAct2();
+          });
+        }
+        rightEl.appendChild(btn);
+      });
+
+      document.getElementById('act2-counter').textContent = state.act2Matched.size;
+      if (state.act2Matched.size === OPPOSITE_PAIRS.length) {
+        state.completed[2] = true;
+        document.getElementById('act2-complete').classList.remove('hidden');
+        updateGlobalProgress();
+      } else {
+        document.getElementById('act2-complete').classList.add('hidden');
+      }
+    }
+
+    function tryMatchAct2() {
+      if (state.act2SelectedLeft && state.act2SelectedRight) {
+        if (state.act2SelectedLeft === state.act2SelectedRight) {
+          state.act2Matched.add(state.act2SelectedLeft);
+          state.act2SelectedLeft = null;
+          state.act2SelectedRight = null;
+          showToast('success');
+        } else {
+          showToast('retry', 'To nejsou protiklady. Zkus jinou dvojici!');
+          state.act2SelectedLeft = null;
+          state.act2SelectedRight = null;
+        }
+      }
+      renderActivity2();
+    }
+
+    // =========================================================
+    // 6. ACTIVITY 3: SORTING COMPARATIVE ADJECTIVES
+    // =========================================================
+
+    function renderActivity3() {
+      const bankEl = document.getElementById('act3-word-bank');
+      const zones = {
+        er: document.getElementById('zone-er-items'),
+        more: document.getElementById('zone-more-items'),
+        irregular: document.getElementById('zone-irregular-items')
+      };
+
+      bankEl.innerHTML = '';
+      const remaining = state.act3Order.filter(item => !state.act3Placed[item.id]);
+
+      if (remaining.length === 0) {
+        bankEl.innerHTML = `<span class="text-emerald-700 font-extrabold text-base">🎉 Všechny kartičky jsou roztříděné!</span>`;
+      } else {
+        remaining.forEach(item => {
+          const isSelected = state.act3SelectedId === item.id;
+          const chip = document.createElement('div');
+          chip.draggable = true;
+          chip.className = `inline-flex items-center gap-2 bg-white border-2 border-sky-300 hover:border-[#2a9d8f] px-3.5 py-2 rounded-2xl shadow-sm cursor-grab active:cursor-grabbing select-none transition ${isSelected ? 'chip-selected' : ''}`;
+          chip.innerHTML = `
+            <span class="font-extrabold text-slate-800 text-base">${item.word}</span>
+            <span class="text-xs font-bold text-slate-400">(${item.base})</span>
+          `;
+
+          chip.addEventListener('click', () => {
+            state.act3SelectedId = (state.act3SelectedId === item.id) ? null : item.id;
+            renderActivity3();
+          });
+
+          chip.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', item.id);
+            state.act3SelectedId = item.id;
+          });
+
+          bankEl.appendChild(chip);
+        });
+      }
+
+      // Render placed items in each zone
+      const zoneColors = {
+        er: 'border-[#2a9d8f]/50 text-[#1f7a6f]',
+        more: 'border-[#e76f51]/50 text-[#c45135]',
+        irregular: 'border-[#7b5ea7]/50 text-[#5e4287]'
+      };
+      const placeholders = {
+        er: 'Sem patří krátká slova...',
+        more: 'Sem patří dlouhá slova...',
+        irregular: 'Sem patří výjimky...'
+      };
+
+      ['er', 'more', 'irregular'].forEach(zoneKey => {
+        const container = zones[zoneKey];
+        container.innerHTML = '';
+        const placedInZone = SORT_ITEMS.filter(item => state.act3Placed[item.id] === zoneKey);
+        if (placedInZone.length === 0) {
+          container.innerHTML = `<p class="text-sm opacity-60 font-semibold italic">${state.act3SelectedId ? 'Klikni sem pro vložení 👇' : placeholders[zoneKey]}</p>`;
+        } else {
+          placedInZone.forEach(item => {
+            const pill = document.createElement('div');
+            pill.className = `inline-flex items-center gap-1.5 bg-white border-2 ${zoneColors[zoneKey]} px-3 py-1.5 rounded-xl font-extrabold text-sm shadow-xs animate-pop-in`;
+            pill.innerHTML = `
+              <span>✓ ${item.word}</span>
+              <span class="text-xs font-semibold text-slate-400">(${item.base})</span>
+            `;
+            container.appendChild(pill);
+          });
+        }
+      });
+
+      const placedCount = Object.keys(state.act3Placed).length;
+      document.getElementById('act3-counter').textContent = placedCount;
+      if (placedCount === SORT_ITEMS.length) {
+        state.completed[3] = true;
+        document.getElementById('act3-complete').classList.remove('hidden');
+        updateGlobalProgress();
+      } else {
+        document.getElementById('act3-complete').classList.add('hidden');
+      }
+    }
+
+    function handleDragOver(e, el) {
+      e.preventDefault();
+      el.classList.add('drop-active');
+    }
+
+    function handleDragLeave(el) {
+      el.classList.remove('drop-active');
+    }
+
+    function handleZoneDrop(e, zoneKey, el) {
+      e.preventDefault();
+      el.classList.remove('drop-active');
+      const itemId = e.dataTransfer.getData('text/plain') || state.act3SelectedId;
+      if (itemId) {
+        checkAct3Sort(itemId, zoneKey, el);
+      }
+    }
+
+    function handleZoneClick(zoneKey) {
+      if (!state.act3SelectedId) {
+        showToast('retry', 'Nejdříve klikni na kartičku nahoře!');
+        return;
+      }
+      const zoneEl = document.getElementById(`zone-${zoneKey}`);
+      checkAct3Sort(state.act3SelectedId, zoneKey, zoneEl);
+    }
+
+    function checkAct3Sort(itemId, targetZone, zoneEl) {
+      const item = SORT_ITEMS.find(x => x.id === itemId);
+      if (!item) return;
+
+      if (item.zone === targetZone) {
+        state.act3Placed[itemId] = targetZone;
+        state.act3SelectedId = null;
+        showToast('success');
+        renderActivity3();
+      } else {
+        zoneEl.classList.add('animate-gentle-shake');
+        setTimeout(() => zoneEl.classList.remove('animate-gentle-shake'), 400);
+        showToast('retry', 'Zkus jiný barevný box! Můžeš se podívat do 💡 Taháku.');
+      }
+    }
+
+    // =========================================================
+    // 7. ACTIVITY 4: CLICKABLE PILL CHOICES IN SHORT TEXTS
+    // =========================================================
+
+    function renderTextCard(containerId, sentences) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      sentences.forEach(sent => {
+        const row = document.createElement('div');
+        row.className = 'bg-[#eef7fb]/60 border border-sky-100 rounded-2xl p-3.5 flex items-start justify-between gap-3';
+
+        const textWrap = document.createElement('div');
+        textWrap.className = 'flex-1 leading-loose text-slate-800 font-semibold';
+
+        if (sent.speaker) {
+          const sp = document.createElement('span');
+          sp.className = 'font-extrabold text-[#2a9d8f] mr-1.5';
+          sp.textContent = sent.speaker;
+          textWrap.appendChild(sp);
+        } else if (sent.badge) {
+          const bd = document.createElement('span');
+          bd.className = 'inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#e76f51]/15 text-[#e76f51] font-extrabold text-xs mr-2 align-middle';
+          bd.textContent = sent.badge;
+          textWrap.appendChild(bd);
+        }
+
+        sent.parts.forEach(part => {
+          if (typeof part === 'string') {
+            textWrap.appendChild(document.createTextNode(part));
+          } else {
+            const solved = state.act4Solved.has(part.gapId);
+            if (solved) {
+              const pill = document.createElement('span');
+              pill.className = 'inline-flex items-center gap-1 bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-extrabold px-3 py-0.5 rounded-xl mx-1 animate-pop-in';
+              pill.textContent = `✓ ${part.answer}`;
+              textWrap.appendChild(pill);
+            } else {
+              const group = document.createElement('span');
+              group.className = 'inline-flex flex-wrap items-center gap-1.5 bg-white border-2 border-sky-200 rounded-2xl p-1 mx-1 align-middle shadow-xs';
+              part.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'px-3 py-1 rounded-xl bg-sky-50 hover:bg-[#2a9d8f] hover:text-white text-slate-800 font-extrabold text-sm sm:text-base transition cursor-pointer';
+                btn.textContent = opt;
+                btn.addEventListener('click', () => {
+                  if (opt === part.answer) {
+                    state.act4Solved.add(part.gapId);
+                    showToast('success');
+                    renderActivity4();
+                  } else {
+                    btn.classList.add('animate-gentle-shake', 'bg-amber-100', 'text-amber-900');
+                    setTimeout(() => btn.classList.remove('animate-gentle-shake', 'bg-amber-100', 'text-amber-900'), 450);
+                    showToast('retry');
+                  }
+                });
+                group.appendChild(btn);
+              });
+              textWrap.appendChild(group);
+            }
+          }
+        });
+
+
+        row.appendChild(textWrap);
+        container.appendChild(row);
+      });
+    }
+
+    function renderActivity4() {
+      renderTextCard('act4-card-a', TEXT_CARD_A);
+      renderTextCard('act4-card-b', TEXT_CARD_B);
+
+      const totalGaps = 11;
+      document.getElementById('act4-counter').textContent = state.act4Solved.size;
+
+      if (state.act4Solved.size === totalGaps) {
+        state.completed[4] = true;
+        document.getElementById('act4-complete').classList.remove('hidden');
+        updateGlobalProgress();
+      } else {
+        document.getElementById('act4-complete').classList.add('hidden');
+      }
+    }
+
+    // =========================================================
+    // 8. INITIALIZATION & RESET
+    // =========================================================
+
+    function initApp() {
+      act1BankOrder = shuffle(TECH_ITEMS);
+      state.act2LeftOrder = shuffle(OPPOSITE_PAIRS);
+      state.act2RightOrder = shuffle(OPPOSITE_PAIRS);
+      state.act3Order = shuffle(SORT_ITEMS);
+
+      renderActivity1();
+      renderActivity2();
+      renderActivity3();
+      renderActivity4();
+      switchTab(1);
+      updateGlobalProgress();
+    }
+
+    function resetAllActivities() {
+      state = {
+        activeTab: 1,
+        completed: { 1: false, 2: false, 3: false, 4: false },
+        act1Matched: new Set(),
+        act1SelectedWord: null,
+        act2Matched: new Set(),
+        act2SelectedLeft: null,
+        act2SelectedRight: null,
+        act2LeftOrder: [],
+        act2RightOrder: [],
+        act3Placed: {},
+        act3SelectedId: null,
+        act3Order: [],
+        act4Solved: new Set()
+      };
+      initApp();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('success', 'Cvičení je připravené od začátku!');
+    }
+
+    // Start when DOM is ready
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
