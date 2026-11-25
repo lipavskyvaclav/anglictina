@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Present Perfect + JUST | Interaktivní procvičení</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Smooth reveal animation for feedback and collapsible panels */
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in {
+      animation: fadeSlideIn 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen pb-16">
+
+  <!-- Sticky Top Score & Navigation Bar -->
+  <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-sm">
+            PP
+          </span>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600 leading-none">Present Perfect + JUST</p>
+            <p class="text-sm font-bold text-slate-800 mt-0.5">
+              Skóre: <span id="global-score" class="text-teal-600">0</span> / <span id="global-total">22</span> bodů
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Jump Pills -->
+        <nav class="flex items-center gap-1.5 overflow-x-auto" aria-label="Rychlá navigace mezi cvičeními">
+          <a href="#ex1" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition">1. Spojovačka</a>
+          <a href="#ex2" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition">2. Slovosled</a>
+          <a href="#ex3" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition">3. Dopisovačka</a>
+          <a href="#ex4" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition">4. Detektiv</a>
+        </nav>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mt-2.5 w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+        <div id="global-progress-bar" class="bg-gradient-to-r from-indigo-600 to-teal-500 h-2 rounded-full transition-all duration-500" style="width: 0%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 pt-6 sm:pt-8 space-y-8">
+
+    <!-- Hero Header -->
+    <header class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-teal-600 rounded-3xl p-6 sm:p-8 text-white shadow-lg">
+      <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">
+        <span>✨ Interaktivní procvičení angličtiny</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
+        Předpřítomný čas se slovíčkem <span class="underline decoration-teal-300 decoration-4 underline-offset-4">JUST</span>
+      </h1>
+      <p class="mt-2.5 text-indigo-100 text-sm sm:text-base max-w-2xl leading-relaxed">
+        Slovíčko <strong>just</strong> používáme, když se něco stalo <strong>právě teď / před chviličkou</strong> a vidíme toho důsledek v přítomnosti. Vyzkoušej si 4 různé úkoly a hned zjistíš, jak na tom jsi!
+      </p>
+
+      <!-- Collapsible Grammar Quick-Help ("Tahák") -->
+      <div class="mt-5">
+        <button
+          id="toggle-cheatsheet-btn"
+          type="button"
+          aria-expanded="false"
+          class="w-full sm:w-auto inline-flex items-center justify-between sm:justify-start gap-2.5 bg-white text-indigo-700 hover:bg-indigo-50 active:scale-[0.99] font-bold text-sm px-4 py-3 rounded-2xl shadow-sm transition"
+        >
+          <span class="flex items-center gap-2">
+            <span>💡</span>
+            <span>Tahák: Jak tvoříme věty s JUST</span>
+          </span>
+          <svg id="cheatsheet-chevron" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="cheatsheet-panel" class="hidden mt-4 bg-white text-slate-800 rounded-2xl p-5 shadow-md animate-fade-in">
+          <p class="text-xs font-bold uppercase tracking-wider text-teal-600 mb-2">Zlatý vzorec</p>
+          <div class="flex flex-wrap items-center gap-2 text-sm sm:text-base font-bold bg-slate-50 border border-slate-200 rounded-xl p-3.5">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-200 text-slate-800">Podmět</span>
+            <span class="text-slate-400">+</span>
+            <span class="px-2.5 py-1 rounded-lg bg-indigo-100 text-indigo-800">have / has ('ve / 's)</span>
+            <span class="text-slate-400">+</span>
+            <span class="px-2.5 py-1 rounded-lg bg-teal-100 text-teal-800 ring-2 ring-teal-300">JUST</span>
+            <span class="text-slate-400">+</span>
+            <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900">3. tvar slovesa</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 mt-2.5">
+            <strong>3. tvar slovesa</strong> = u pravidelných koncovka <strong>-ed</strong> (např. <em>cleaned, dropped</em>), u nepravidelných 3. sloupec v tabulce (např. <em>eaten, woken, swum</em>). Pro <strong>he / she / it</strong> používáme <strong>has ('s)</strong>, pro ostatní osoby <strong>have ('ve)</strong>.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+            <div class="bg-indigo-50/70 border border-indigo-100 rounded-xl p-3.5">
+              <p class="font-bold text-indigo-900 text-sm sm:text-base">
+                I<span class="text-indigo-600">'ve</span> <span class="text-teal-700 underline">just</span> <span class="text-amber-700">eaten</span> a whole duck.
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">Právě jsem snědl celou kachnu.</p>
+            </div>
+            <div class="bg-teal-50/70 border border-teal-100 rounded-xl p-3.5">
+              <p class="font-bold text-teal-900 text-sm sm:text-base">
+                She <span class="text-indigo-600">has</span> <span class="text-teal-700 underline">just</span> <span class="text-amber-700">woken</span> up.
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">Právě se vzbudila.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========================================================= -->
+    <!-- EXERCISE 1: SPOJOVAČKA (Match the Situation & Reaction)   -->
+    <!-- ========================================================= -->
+    <section id="ex1" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-7 scroll-mt-24">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg mb-1.5">Cvičení 1</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Spojovačka: Situace a reakce</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Nejprve ťukni na <strong>situaci / otázku</strong> a potom na <strong>odpovídající reakci s JUST</strong>. Pro zrušení dvojice ťukni znovu na spárovanou kartu.
+          </p>
+        </div>
+        <div id="ex1-badge" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold whitespace-nowrap">
+          0 / 6 bodů
+        </div>
+      </div>
+
+      <!-- Tap-to-match helper banner -->
+      <div id="ex1-hint" class="mb-4 px-4 py-2.5 rounded-xl bg-indigo-50/80 border border-indigo-100 text-xs sm:text-sm text-indigo-800 font-medium">
+        👆 Vyber jednu z otázek/situací (sloupec A) a spoj ji se správnou odpovědí (sloupec B).
+      </div>
+
+      <!-- Matching Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <!-- Left Column: Situations -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 px-1">A) Situace / Důkaz</h3>
+          <div id="ex1-left-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Right Column: Reactions -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 px-1">B) Reakce s JUST</h3>
+          <div id="ex1-right-list" class="space-y-2.5"></div>
+        </div>
+      </div>
+
+      <!-- Feedback area for Exercise 1 -->
+      <div id="ex1-feedback" class="hidden mt-5 space-y-2.5 animate-fade-in"></div>
+
+      <!-- Action Buttons -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button
+          id="ex1-check-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-bold text-sm shadow-sm transition"
+        >
+          Zkontrolovat
+        </button>
+        <button
+          id="ex1-reset-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-bold text-sm transition"
+        >
+          Zkusit znovu
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- EXERCISE 2: POSKLÁDEJ VĚTU (Word Order Builder)           -->
+    <!-- ========================================================= -->
+    <section id="ex2" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-7 scroll-mt-24">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg mb-1.5">Cvičení 2</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Poskládej větu: Kam patří JUST?</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Ťukej na kartičky se slovy ve správném pořadí. Pokud se spleteš, ťukni na umístěné slovo a vrátí se zpět.
+          </p>
+        </div>
+        <div id="ex2-badge" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold whitespace-nowrap">
+          0 / 5 bodů
+        </div>
+      </div>
+
+      <div id="ex2-container" class="space-y-5"></div>
+
+      <!-- Action Buttons -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button
+          id="ex2-check-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-bold text-sm shadow-sm transition"
+        >
+          Zkontrolovat
+        </button>
+        <button
+          id="ex2-reset-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-bold text-sm transition"
+        >
+          Zkusit znovu
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- EXERCISE 3: DOPISOVAČKA (Complete the Mini-Dialogues)     -->
+    <!-- ========================================================= -->
+    <section id="ex3" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-7 scroll-mt-24">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg mb-1.5">Cvičení 3</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Dopisovačka: Doplň mini-rozhovory</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            Napiš celý tvar: <strong>have / has + just + 3. tvar slovesa</strong> v závorce. Uznáváme plné i zkrácené tvary (např. <em>have just drunk</em> i <em>'ve just drunk</em>).
+          </p>
+        </div>
+        <div id="ex3-badge" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold whitespace-nowrap">
+          0 / 6 bodů
+        </div>
+      </div>
+
+      <div id="ex3-container" class="space-y-4"></div>
+
+      <!-- Action Buttons -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button
+          id="ex3-check-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-white font-bold text-sm shadow-sm transition"
+        >
+          Zkontrolovat
+        </button>
+        <button
+          id="ex3-reset-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-bold text-sm transition"
+        >
+          Zkusit znovu
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- EXERCISE 4: GRAMATICKÝ DETEKTIV (Spot the Trap)           -->
+    <!-- ========================================================= -->
+    <section id="ex4" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-7 scroll-mt-24">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-5">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg mb-1.5">Cvičení 4</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Gramatický detektiv: Odhal past!</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            U každé situace je jen <strong>jedna věta správně</strong>. Ostatní obsahují typickou gramatickou past. Klikni na správnou možnost – výsledek uvidíš okamžitě!
+          </p>
+        </div>
+        <div id="ex4-badge" class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold whitespace-nowrap">
+          0 / 5 bodů
+        </div>
+      </div>
+
+      <div id="ex4-container" class="space-y-5"></div>
+
+      <!-- Action Buttons -->
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <button
+          id="ex4-reset-btn"
+          type="button"
+          class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-700 font-bold text-sm transition"
+        >
+          Zkusit cvičení znovu
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- FINAL SUMMARY CARD                                        -->
+    <!-- ========================================================= -->
+    <section id="summary-card" class="bg-white rounded-3xl border-2 border-indigo-200 shadow-md p-6 sm:p-8 text-center transition-all">
+      <div id="summary-icon" class="text-4xl mb-2">🎯</div>
+      <h2 id="summary-title" class="text-xl sm:text-2xl font-extrabold text-slate-900">Celkové hodnocení</h2>
+      <p id="summary-subtitle" class="text-sm sm:text-base text-slate-600 mt-1.5 max-w-xl mx-auto">
+        Vyplň a zkontroluj všechna 4 cvičení, abys viděl(a) svůj celkový výsledek.
+      </p>
+
+      <div class="mt-5 inline-flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Body</p>
+          <p class="text-2xl sm:text-3xl font-extrabold text-indigo-600">
+            <span id="summary-score">0</span> <span class="text-slate-400 text-lg font-semibold">/ 22</span>
+          </p>
+        </div>
+        <div class="w-px h-10 bg-slate-200"></div>
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Úspěšnost</p>
+          <p id="summary-percent" class="text-2xl sm:text-3xl font-extrabold text-teal-600">0 %</p>
+        </div>
+      </div>
+
+      <div id="summary-status-pills" class="mt-5 flex flex-wrap justify-center gap-2 text-xs font-semibold">
+        <span id="pill-ex1" class="px-3 py-1 rounded-full bg-slate-100 text-slate-500">1. Spojovačka: čeká</span>
+        <span id="pill-ex2" class="px-3 py-1 rounded-full bg-slate-100 text-slate-500">2. Slovosled: čeká</span>
+        <span id="pill-ex3" class="px-3 py-1 rounded-full bg-slate-100 text-slate-500">3. Dopisovačka: čeká</span>
+        <span id="pill-ex4" class="px-3 py-1 rounded-full bg-slate-100 text-slate-500">4. Detektiv: čeká</span>
+      </div>
+
+      <div class="mt-6">
+        <button
+          id="reset-all-btn"
+          type="button"
+          class="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white font-bold text-sm shadow-sm transition"
+        >
+          🔄 Začít vše od začátku
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =====================================================================
+       UTILITY FUNCTIONS & GLOBAL STATE
+       ===================================================================== */
+
+    /**
+     * Fisher-Yates shuffle returning a new shuffled copy of an array.
+     */
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /**
+     * Tracks points and completion status across all 4 exercises.
+     */
+    const appState = {
+      scores: { ex1: 0, ex2: 0, ex3: 0, ex4: 0 },
+      maxScores: { ex1: 6, ex2: 5, ex3: 6, ex4: 5 },
+      completed: { ex1: false, ex2: false, ex3: false, ex4: false },
+    };
+
+    /**
+     * Updates sticky top bar, section badges, and the final summary card.
+     */
+    function updateGlobalScore() {
+      const totalEarned =
+        appState.scores.ex1 +
+        appState.scores.ex2 +
+        appState.scores.ex3 +
+        appState.scores.ex4;
+      const totalMax =
+        appState.maxScores.ex1 +
+        appState.maxScores.ex2 +
+        appState.maxScores.ex3 +
+        appState.maxScores.ex4;
+      const percent = Math.round((totalEarned / totalMax) * 100);
+
+      document.getElementById('global-score').textContent = totalEarned;
+      document.getElementById('global-total').textContent = totalMax;
+      document.getElementById('global-progress-bar').style.width = `${percent}%`;
+
+      // Update individual exercise badges and summary pills
+      const labels = {
+        ex1: '1. Spojovačka',
+        ex2: '2. Slovosled',
+        ex3: '3. Dopisovačka',
+        ex4: '4. Detektiv',
+      };
+
+      ['ex1', 'ex2', 'ex3', 'ex4'].forEach((key) => {
+        const badge = document.getElementById(`${key}-badge`);
+        const pill = document.getElementById(`pill-${key}`);
+        const s = appState.scores[key];
+        const m = appState.maxScores[key];
+
+        badge.textContent = `${s} / ${m} bodů`;
+        if (appState.completed[key]) {
+          if (s === m) {
+            badge.className = 'px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 text-xs font-bold whitespace-nowrap';
+            pill.className = 'px-3 py-1 rounded-full bg-emerald-100 text-emerald-800';
+          } else {
+            badge.className = 'px-3 py-1.5 rounded-xl bg-amber-100 text-amber-800 text-xs font-bold whitespace-nowrap';
+            pill.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800';
+          }
+          pill.textContent = `${labels[key]}: ${s}/${m}`;
+        } else {
+          badge.className = 'px-3 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-bold whitespace-nowrap';
+          pill.className = 'px-3 py-1 rounded-full bg-slate-100 text-slate-500';
+          pill.textContent = `${labels[key]}: čeká`;
+        }
+      });
+
+      // Update summary card
+      document.getElementById('summary-score').textContent = totalEarned;
+      document.getElementById('summary-percent').textContent = `${percent} %`;
+
+      const allDone =
+        appState.completed.ex1 &&
+        appState.completed.ex2 &&
+        appState.completed.ex3 &&
+        appState.completed.ex4;
+
+      const summaryCard = document.getElementById('summary-card');
+      const summaryIcon = document.getElementById('summary-icon');
+      const summaryTitle = document.getElementById('summary-title');
+      const summarySubtitle = document.getElementById('summary-subtitle');
+
+      if (allDone) {
+        summaryCard.classList.remove('border-indigo-200');
+        summaryCard.classList.add('border-teal-400', 'bg-gradient-to-b', 'from-white', 'to-teal-50/50');
+        if (percent === 100) {
+          summaryIcon.textContent = '🏆';
+          summaryTitle.textContent = 'Absolutní dokonalost!';
+          summarySubtitle.textContent = 'Skvělá práce! Předpřítomný čas se slovíčkem JUST máš v malíku bez jediné chyby.';
+        } else if (percent >= 80) {
+          summaryIcon.textContent = '🎉';
+          summaryTitle.textContent = 'Výborný výsledek!';
+          summarySubtitle.textContent = 'Jde ti to skvěle! Mrkni ještě na drobné chybičky výše a příště to bude za 100 %.';
+        } else if (percent >= 55) {
+          summaryIcon.textContent = '👍';
+          summaryTitle.textContent = 'Dobrá práce, ale jde to ještě líp!';
+          summarySubtitle.textContent = 'Základ už chápeš. Projdi si vysvětlení u červených odpovědí a zkus problematická cvičení znovu.';
+        } else {
+          summaryIcon.textContent = '💪';
+          summaryTitle.textContent = 'Nevadí, trénink dělá mistra!';
+          summarySubtitle.textContent = 'Otevři si nahoře tahák, zkontroluj 3. tvary sloves a slovosled s JUST a zkus to ještě jednou.';
+        }
+      } else {
+        summaryCard.className = 'bg-white rounded-3xl border-2 border-indigo-200 shadow-md p-6 sm:p-8 text-center transition-all';
+        summaryIcon.textContent = '🎯';
+        summaryTitle.textContent = 'Celkové hodnocení';
+        summarySubtitle.textContent = 'Vyplň a zkontroluj všechna 4 cvičení, abys viděl(a) svůj celkový výsledek.';
+      }
+    }
+
+    /* =====================================================================
+       COLLAPSIBLE CHEATSHEET ("Tahák")
+       ===================================================================== */
+    const cheatsheetBtn = document.getElementById('toggle-cheatsheet-btn');
+    const cheatsheetPanel = document.getElementById('cheatsheet-panel');
+    const cheatsheetChevron = document.getElementById('cheatsheet-chevron');
+
+    cheatsheetBtn.addEventListener('click', () => {
+      const isHidden = cheatsheetPanel.classList.contains('hidden');
+      cheatsheetPanel.classList.toggle('hidden');
+      cheatsheetBtn.setAttribute('aria-expanded', String(isHidden));
+      cheatsheetChevron.classList.toggle('rotate-180', isHidden);
+    });
+
+    /* =====================================================================
+       EXERCISE 1: SPOJOVAČKA (Tap-to-Match)
+       ===================================================================== */
+    const ex1Data = [
+      {
+        id: 1,
+        left: "Why don't you have another slice of cake?",
+        right: "No thanks, I've just eaten a huge dinner!",
+        clue: 'Někdo nabízí další kousek dortu → logickou reakcí je, že jsi právě snědl(a) obrovskou večeři (eaten a huge dinner).',
+      },
+      {
+        id: 2,
+        left: 'Why are you wiping your eyes?',
+        right: "I've just cut three big onions.",
+        clue: 'Utírání očí (slzení) souvisí s tím, že jsi právě nakrájel(a) tři velké cibule (cut three big onions).',
+      },
+      {
+        id: 3,
+        left: "Don't walk on the kitchen floor!",
+        right: "I've just swept and cleaned it.",
+        clue: 'Zákaz vstupu na kuchyňskou podlahu → právě jsi ji zametl(a) a umyl(a) (swept and cleaned it).',
+      },
+      {
+        id: 4,
+        left: 'Why is your hair completely wet?',
+        right: "I've just swum twenty laps in the pool.",
+        clue: 'Úplně mokré vlasy → právě jsi uplaval(a) dvacet bazénů (swum twenty laps in the pool).',
+      },
+      {
+        id: 5,
+        left: "Don't forget to invite Jenny to the party.",
+        right: "Relax, I've just sent her a message.",
+        clue: 'Připomínka pozvat Jenny → právě jsi jí poslal(a) zprávu (sent her a message).',
+      },
+      {
+        id: 6,
+        left: 'Why is Tom grinning from ear to ear?',
+        right: "He's just won the school chess tournament!",
+        clue: 'Tom se usmívá od ucha k uchu → právě vyhrál školní šachový turnaj (won the school chess tournament).',
+      },
+    ];
+
+    // 6 distinct accessible color themes for matched pairs (before checking)
+    const pairColors = [
+      { bg: 'bg-indigo-50', border: 'border-indigo-400', badge: 'bg-indigo-600 text-white' },
+      { bg: 'bg-teal-50', border: 'border-teal-400', badge: 'bg-teal-600 text-white' },
+      { bg: 'bg-amber-50', border: 'border-amber-400', badge: 'bg-amber-500 text-white' },
+      { bg: 'bg-purple-50', border: 'border-purple-400', badge: 'bg-purple-600 text-white' },
+      { bg: 'bg-sky-50', border: 'border-sky-400', badge: 'bg-sky-600 text-white' },
+      { bg: 'bg-rose-50', border: 'border-rose-400', badge: 'bg-rose-500 text-white' },
+    ];
+
+    let ex1ShuffledRight = [];
+    let ex1SelectedLeft = null; // id of currently selected left card
+    let ex1Matches = {}; // { leftId: rightId }
+    let ex1PairColorIndex = {}; // { leftId: colorIdx }
+    let ex1Checked = false;
+
+    function initEx1() {
+      ex1ShuffledRight = shuffleArray(ex1Data);
+      ex1SelectedLeft = null;
+      ex1Matches = {};
+      ex1PairColorIndex = {};
+      ex1Checked = false;
+      appState.scores.ex1 = 0;
+      appState.completed.ex1 = false;
+      document.getElementById('ex1-feedback').classList.add('hidden');
+      document.getElementById('ex1-feedback').innerHTML = '';
+      renderEx1();
+      updateGlobalScore();
+    }
+
+    function getFreeColorIndex() {
+      const used = new Set(Object.values(ex1PairColorIndex));
+      for (let i = 0; i < pairColors.length; i++) {
+        if (!used.has(i)) return i;
+      }
+      return 0;
+    }
+
+    function renderEx1() {
+      const leftList = document.getElementById('ex1-left-list');
+      const rightList = document.getElementById('ex1-right-list');
+      const hintEl = document.getElementById('ex1-hint');
+
+      leftList.innerHTML = '';
+      rightList.innerHTML = '';
+
+      // Update contextual instruction hint
+      if (ex1Checked) {
+        hintEl.textContent = '✅ Cvičení je zkontrolováno. Podívej se na výsledky níže nebo klikni na „Zkusit znovu“.';
+      } else if (ex1SelectedLeft !== null) {
+        hintEl.textContent = '👉 Teď ťukni na odpovídající reakci ve sloupci B (nebo znovu na vybranou kartu pro zrušení).';
+      } else {
+        hintEl.textContent = '👆 Vyber jednu ze situací (sloupec A) a pak ji spoj s reakcí ve sloupci B.';
+      }
+
+      // Render Left Column
+      ex1Data.forEach((item, idx) => {
+        const isSelected = ex1SelectedLeft === item.id;
+        const matchedRightId = ex1Matches[item.id];
+        const hasMatch = matchedRightId !== undefined;
+        const colorIdx = ex1PairColorIndex[item.id];
+
+        let cardClasses = 'w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 transition flex items-start gap-3 text-sm sm:text-base font-medium ';
+        let badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-slate-200 text-slate-700">${idx + 1}</span>`;
+
+        if (ex1Checked) {
+          const isCorrect = matchedRightId === item.id;
+          if (isCorrect) {
+            cardClasses += 'bg-emerald-50 border-emerald-500 text-emerald-950';
+            badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-emerald-600 text-white">✓</span>`;
+          } else {
+            cardClasses += 'bg-rose-50 border-rose-400 text-rose-950';
+            badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-rose-600 text-white">✕</span>`;
+          }
+        } else if (isSelected) {
+          cardClasses += 'bg-indigo-100 border-indigo-600 text-indigo-950 ring-2 ring-indigo-300 shadow-sm';
+          badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-indigo-600 text-white">${idx + 1}</span>`;
+        } else if (hasMatch) {
+          const c = pairColors[colorIdx];
+          cardClasses += `${c.bg} ${c.border} text-slate-900`;
+          badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${c.badge}">${idx + 1}</span>`;
+        } else {
+          cardClasses += 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-slate-50 text-slate-800';
+        }
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = cardClasses;
+        btn.disabled = ex1Checked;
+        btn.innerHTML = `${badgeHtml}<span class="leading-snug">${item.left}</span>`;
+
+        btn.addEventListener('click', () => {
+          if (ex1Checked) return;
+          if (ex1SelectedLeft === item.id) {
+            // Deselect
+            ex1SelectedLeft = null;
+          } else if (ex1Matches[item.id] !== undefined && ex1SelectedLeft === null) {
+            // Unmatch existing pair when tapped directly
+            delete ex1Matches[item.id];
+            delete ex1PairColorIndex[item.id];
+          } else {
+            ex1SelectedLeft = item.id;
+          }
+          renderEx1();
+        });
+
+        leftList.appendChild(btn);
+      });
+
+      // Render Right Column
+      ex1ShuffledRight.forEach((item) => {
+        // Find if any left card is matched to this right card
+        const pairedLeftIdStr = Object.keys(ex1Matches).find((k) => ex1Matches[k] === item.id);
+        const pairedLeftId = pairedLeftIdStr ? Number(pairedLeftIdStr) : null;
+        const pairedLeftIndex = pairedLeftId ? ex1Data.findIndex((d) => d.id === pairedLeftId) + 1 : null;
+        const colorIdx = pairedLeftId !== null ? ex1PairColorIndex[pairedLeftId] : null;
+
+        let cardClasses = 'w-full text-left p-3.5 sm:p-4 rounded-2xl border-2 transition flex items-start gap-3 text-sm sm:text-base font-medium ';
+        let badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 border-2 border-dashed border-slate-300 text-slate-400">?</span>`;
+
+        if (ex1Checked) {
+          const isCorrect = pairedLeftId === item.id;
+          if (isCorrect) {
+            cardClasses += 'bg-emerald-50 border-emerald-500 text-emerald-950';
+            badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-emerald-600 text-white">${pairedLeftIndex}</span>`;
+          } else {
+            cardClasses += 'bg-rose-50 border-rose-400 text-rose-950';
+            badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 bg-rose-600 text-white">${pairedLeftIndex || '–'}</span>`;
+          }
+        } else if (pairedLeftId !== null) {
+          const c = pairColors[colorIdx];
+          cardClasses += `${c.bg} ${c.border} text-slate-900`;
+          badgeHtml = `<span class="shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${c.badge}">${pairedLeftIndex}</span>`;
+        } else if (ex1SelectedLeft !== null) {
+          cardClasses += 'bg-white border-indigo-200 hover:border-indigo-500 hover:bg-indigo-50/50 text-slate-800 cursor-pointer';
+        } else {
+          cardClasses += 'bg-white border-slate-200 hover:border-slate-300 text-slate-800';
+        }
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = cardClasses;
+        btn.disabled = ex1Checked;
+        btn.innerHTML = `${badgeHtml}<span class="leading-snug">${item.right}</span>`;
+
+        btn.addEventListener('click', () => {
+          if (ex1Checked) return;
+          if (ex1SelectedLeft !== null) {
+            // If this right card was already paired with another left card, unpair the old one
+            if (pairedLeftId !== null && pairedLeftId !== ex1SelectedLeft) {
+              delete ex1Matches[pairedLeftId];
+              delete ex1PairColorIndex[pairedLeftId];
+            }
+            // Assign color if left card doesn't have one yet
+            if (ex1PairColorIndex[ex1SelectedLeft] === undefined) {
+              ex1PairColorIndex[ex1SelectedLeft] = getFreeColorIndex();
+            }
+            ex1Matches[ex1SelectedLeft] = item.id;
+            ex1SelectedLeft = null;
+            renderEx1();
+          } else if (pairedLeftId !== null) {
+            // Tapping an already matched right card unmatches it
+            delete ex1Matches[pairedLeftId];
+            delete ex1PairColorIndex[pairedLeftId];
+            renderEx1();
+          }
+        });
+
+        rightList.appendChild(btn);
+      });
+    }
+
+    document.getElementById('ex1-check-btn').addEventListener('click', () => {
+      ex1Checked = true;
+      ex1SelectedLeft = null;
+      let correctCount = 0;
+      const feedbackItems = [];
+
+      ex1Data.forEach((item, idx) => {
+        const chosenRightId = ex1Matches[item.id];
+        if (chosenRightId === item.id) {
+          correctCount++;
+        } else {
+          const statusMsg = chosenRightId === undefined ? 'Nebylo spárováno.' : 'Špatná dvojice.';
+          feedbackItems.push(`
+            <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-900">
+              <p class="font-bold">Bod ${idx + 1}: ${statusMsg}</p>
+              <p class="mt-1 text-slate-700"><strong>Správná dvojice:</strong> „${item.left}“ → <em>„${item.right}“</em></p>
+              <p class="mt-1 text-xs sm:text-sm text-rose-800">💡 ${item.clue}</p>
+            </div>
+          `);
+        }
+      });
+
+      appState.scores.ex1 = correctCount;
+      appState.completed.ex1 = true;
+
+      const fb = document.getElementById('ex1-feedback');
+      fb.classList.remove('hidden');
+      if (correctCount === ex1Data.length) {
+        fb.innerHTML = `
+          <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-semibold text-sm sm:text-base">
+            🎉 Výborně! Všech 6 situací jsi spojil(a) naprosto správně!
+          </div>
+        `;
+      } else {
+        fb.innerHTML = `
+          <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-semibold text-sm">
+            Máš správně ${correctCount} ze ${ex1Data.length} dvojic. Podívej se na vysvětlení chyb:
+          </div>
+          ${feedbackItems.join('')}
+        `;
+      }
+
+      renderEx1();
+      updateGlobalScore();
+    });
+
+    document.getElementById('ex1-reset-btn').addEventListener('click', initEx1);
+
+    /* =====================================================================
+       EXERCISE 2: POSKLÁDEJ VĚTU (Word Order Builder)
+       ===================================================================== */
+    const ex2Data = [
+      {
+        id: 1,
+        context: 'Why is she still in her pyjamas at 11 AM?',
+        words: ['She', 'has', 'just', 'woken', 'up.'],
+      },
+      {
+        id: 2,
+        context: 'Why are you staring at the floor in shock?',
+        words: ['I', 'have', 'just', 'dropped', 'my', 'phone.'],
+      },
+      {
+        id: 3,
+        context: 'Why are your neighbours so excited?',
+        words: ['They', 'have', 'just', 'bought', 'a', 'new', 'car.'],
+      },
+      {
+        id: 4,
+        context: 'Why does the kitchen smell like smoke?',
+        words: ['He', 'has', 'just', 'burnt', 'the', 'toast.'],
+      },
+      {
+        id: 5,
+        context: 'Why are you both out of breath?',
+        words: ['We', 'have', 'just', 'run', 'five', 'kilometres.'],
+      },
+    ];
+
+    // State per item: { bank: [{uid, text}], placed: [{uid, text}] }
+    let ex2State = [];
+    let ex2Checked = false;
+
+    function initEx2() {
+      ex2Checked = false;
+      appState.scores.ex2 = 0;
+      appState.completed.ex2 = false;
+
+      ex2State = ex2Data.map((item) => {
+        const tagged = item.words.map((w, i) => ({ uid: `${item.id}-${i}`, text: w }));
+        // Ensure shuffled order isn't accidentally identical to the correct sentence
+        let shuffled = shuffleArray(tagged);
+        if (shuffled.map((x) => x.text).join(' ') === item.words.join(' ')) {
+          shuffled = shuffleArray(tagged);
+        }
+        return { bank: shuffled, placed: [], feedback: null };
+      });
+
+      renderEx2();
+      updateGlobalScore();
+    }
+
+    function renderEx2() {
+      const container = document.getElementById('ex2-container');
+      container.innerHTML = '';
+
+      ex2Data.forEach((item, idx) => {
+        const state = ex2State[idx];
+        const wrapper = document.createElement('div');
+        wrapper.className = 'p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60';
+
+        // Header with context question + mini clear button
+        const headerHtml = `
+          <div class="flex items-start justify-between gap-2 mb-3">
+            <div>
+              <span class="text-xs font-bold text-teal-700 uppercase tracking-wider">Otázka ${idx + 1}</span>
+              <p class="text-sm sm:text-base font-bold text-slate-800 mt-0.5">„${item.context}“</p>
+            </div>
+            ${
+              !ex2Checked && state.placed.length > 0
+                ? `<button type="button" data-clear-idx="${idx}" class="text-xs font-semibold text-slate-500 hover:text-rose-600 px-2 py-1 rounded-lg hover:bg-rose-50 transition shrink-0">Smazat</button>`
+                : ''
+            }
+          </div>
+        `;
+
+        // Dropzone styling based on check status
+        let zoneBorder = 'border-slate-300 bg-white';
+        if (ex2Checked && state.feedback) {
+          zoneBorder = state.feedback.isCorrect
+            ? 'border-emerald-500 bg-emerald-50/70'
+            : 'border-rose-400 bg-rose-50/70';
+        }
+
+        wrapper.innerHTML = headerHtml;
+
+        // Sentence builder area (placed chips)
+        const placedZone = document.createElement('div');
+        placedZone.className = `min-h-[54px] p-2.5 rounded-xl border-2 border-dashed ${zoneBorder} flex flex-wrap items-center gap-2 transition`;
+
+        if (state.placed.length === 0) {
+          placedZone.innerHTML = `<span class="text-xs sm:text-sm text-slate-400 italic px-1">Ťukni na slova níže a poskládej odpověď...</span>`;
+        } else {
+          state.placed.forEach((chip) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.disabled = ex2Checked;
+            btn.className =
+              'px-3.5 py-2 rounded-xl text-sm font-bold shadow-sm transition active:scale-95 ' +
+              (ex2Checked
+                ? 'bg-white border border-slate-300 text-slate-800 cursor-default'
+                : 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer');
+            btn.textContent = chip.text;
+            btn.addEventListener('click', () => {
+              if (ex2Checked) return;
+              state.placed = state.placed.filter((c) => c.uid !== chip.uid);
+              state.bank.push(chip);
+              renderEx2();
+            });
+            placedZone.appendChild(btn);
+          });
+        }
+
+        wrapper.appendChild(placedZone);
+
+        // Word bank area
+        const bankZone = document.createElement('div');
+        bankZone.className = 'mt-3 flex flex-wrap gap-2';
+
+        state.bank.forEach((chip) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.disabled = ex2Checked;
+          btn.className =
+            'px-3.5 py-2 rounded-xl text-sm font-semibold border transition active:scale-95 ' +
+            (ex2Checked
+              ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-default'
+              : 'bg-white border-slate-300 hover:border-indigo-400 hover:bg-indigo-50 text-slate-800 shadow-sm cursor-pointer');
+          btn.textContent = chip.text;
+          btn.addEventListener('click', () => {
+            if (ex2Checked) return;
+            state.bank = state.bank.filter((c) => c.uid !== chip.uid);
+            state.placed.push(chip);
+            renderEx2();
+          });
+          bankZone.appendChild(btn);
+        });
+
+        wrapper.appendChild(bankZone);
+
+        // Feedback banner if checked
+        if (ex2Checked && state.feedback) {
+          const fbDiv = document.createElement('div');
+          fbDiv.className = state.feedback.isCorrect
+            ? 'mt-3 p-3 rounded-xl bg-emerald-100/80 text-emerald-900 text-xs sm:text-sm font-semibold animate-fade-in'
+            : 'mt-3 p-3.5 rounded-xl bg-rose-100/80 text-rose-900 text-xs sm:text-sm animate-fade-in';
+          fbDiv.innerHTML = state.feedback.html;
+          wrapper.appendChild(fbDiv);
+        }
+
+        container.appendChild(wrapper);
+      });
+
+      // Attach individual clear handlers
+      container.querySelectorAll('[data-clear-idx]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.getAttribute('data-clear-idx'));
+          const state = ex2State[idx];
+          state.bank = [...state.bank, ...state.placed];
+          state.placed = [];
+          renderEx2();
+        });
+      });
+    }
+
+    document.getElementById('ex2-check-btn').addEventListener('click', () => {
+      ex2Checked = true;
+      let correctCount = 0;
+
+      ex2Data.forEach((item, idx) => {
+        const state = ex2State[idx];
+        const userWords = state.placed.map((c) => c.text);
+        const userSentence = userWords.join(' ');
+        const correctSentence = item.words.join(' ');
+
+        if (userSentence === correctSentence) {
+          correctCount++;
+          state.feedback = {
+            isCorrect: true,
+            html: '✅ Skvěle! Slovosled je naprosto správně.',
+          };
+        } else {
+          // Smart Czech explanation for "just" placement
+          const lowerWords = userWords.map((w) => w.toLowerCase());
+          const auxIdx = lowerWords.findIndex((w) => w === 'have' || w === 'has');
+          const justIdx = lowerWords.indexOf('just');
+          const verbWord = item.words[3].toLowerCase(); // 3rd form is always at index 3 in ex2Data
+          const verbIdx = lowerWords.indexOf(verbWord);
+
+          let reason = 'Zkontroluj pořadí slov ve větě (Podmět + have/has + just + 3. tvar slovesa + zbytek věty).';
+
+          if (userWords.length === 0) {
+            reason = 'Věta není poskládaná. Ťukni na slovíčka a sestav celou větu.';
+          } else if (userWords.length < item.words.length) {
+            reason = 'Ve větě chybí některá slovíčka. Musíš použít všechny kartičky.';
+          } else if (
+            justIdx !== -1 &&
+            ((auxIdx !== -1 && justIdx < auxIdx) || (verbIdx !== -1 && justIdx > verbIdx))
+          ) {
+            reason =
+              "Pozor na slovosled! Slovíčko 'just' patří vždy MEZI pomocné sloveso (have/has) a 3. tvar slovesa.";
+          }
+
+          state.feedback = {
+            isCorrect: false,
+            html: `
+              <p class="font-bold">❌ ${reason}</p>
+              <p class="mt-1"><strong>Správná věta:</strong> ${correctSentence}</p>
+            `,
+          };
+        }
+      });
+
+      appState.scores.ex2 = correctCount;
+      appState.completed.ex2 = true;
+      renderEx2();
+      updateGlobalScore();
+    });
+
+    document.getElementById('ex2-reset-btn').addEventListener('click', initEx2);
+
+    /* =====================================================================
+       EXERCISE 3: DOPISOVAČKA (Complete Mini-Dialogues with Smart Diagnostics)
+       ===================================================================== */
+    const ex3Data = [
+      {
+        id: 1,
+        speakerA: 'Would you like some orange juice?',
+        beforeInput: 'No, thanks. I',
+        afterInput: 'a whole bottle of water.',
+        baseVerb: 'drink',
+        expectedAux: 'have', // 'have' or 'has'
+        participle: 'drunk',
+        wrongForms: ['drank', 'drinked', 'drink'],
+        displayCorrect: "have just drunk / 've just drunk",
+      },
+      {
+        id: 2,
+        speakerA: 'Why is Mia crying?',
+        beforeInput: 'She',
+        afterInput: 'off her skateboard.',
+        baseVerb: 'fall',
+        expectedAux: 'has',
+        participle: 'fallen',
+        wrongForms: ['fell', 'falled', 'fall', 'falen'],
+        displayCorrect: "has just fallen / 's just fallen",
+      },
+      {
+        id: 3,
+        speakerA: 'Can I borrow your pen?',
+        beforeInput: 'Sorry, I',
+        afterInput: 'it somewhere!',
+        baseVerb: 'lose',
+        expectedAux: 'have',
+        participle: 'lost',
+        wrongForms: ['losed', 'lose', 'loose', 'loosed'],
+        displayCorrect: "have just lost / 've just lost",
+      },
+      {
+        id: 4,
+        speakerA: 'Why is the dog barking at the door?',
+        beforeInput: 'Dad',
+        afterInput: 'home from work.',
+        baseVerb: 'come',
+        expectedAux: 'has',
+        participle: 'come',
+        wrongForms: ['came', 'comed', 'comming', 'commed'],
+        displayCorrect: "has just come / 's just come",
+      },
+      {
+        id: 5,
+        speakerA: 'Are you still doing your homework?',
+        beforeInput: 'No! I',
+        afterInput: 'the last sentence.',
+        baseVerb: 'write',
+        expectedAux: 'have',
+        participle: 'written',
+        wrongForms: ['wrote', 'writed', 'write', 'writen'],
+        displayCorrect: "have just written / 've just written",
+      },
+      {
+        id: 6,
+        speakerA: 'Why is Sam so angry?',
+        beforeInput: 'His little brother',
+        afterInput: 'his favourite mug.',
+        baseVerb: 'break',
+        expectedAux: 'has',
+        participle: 'broken',
+        wrongForms: ['broke', 'breaked', 'break'],
+        displayCorrect: "has just broken / 's just broken",
+      },
+    ];
+
+    /**
+     * Normalizes user text: lowercase, unify curly apostrophes, collapse spaces.
+     */
+    function normalizeAnswer(str) {
+      return str
+        .replace(/[’`´]/g, "'")
+        .trim()
+        .replace(/\s+/g, ' ')
+        .toLowerCase();
+    }
+
+    /**
+     * Evaluates a user's answer for Exercise 3 and returns diagnostic Czech feedback.
+     */
+    function diagnoseEx3Answer(rawInput, item) {
+      const norm = normalizeAnswer(rawInput);
+      if (!norm) {
+        return {
+          isCorrect: false,
+          message: 'Doplň chybějící tvar.',
+        };
+      }
+
+      // Build accepted answers
+      const validAuxForms =
+        item.expectedAux === 'have' ? ['have', "'ve", 've'] : ['has', "'s", 's'];
+      const wrongAuxForms =
+        item.expectedAux === 'have' ? ['has', "'s", 's'] : ['have', "'ve", 've'];
+
+      const accepted = validAuxForms.map((aux) => `${aux} just ${item.participle}`);
+      if (accepted.includes(norm)) {
+        return { isCorrect: true, message: 'Výborně! Správný tvar i slovosled.' };
+      }
+
+      const tokens = norm.split(' ');
+      const hasJust = tokens.includes('just');
+      const foundValidAuxIdx = tokens.findIndex((t) => validAuxForms.includes(t));
+      const foundWrongAuxIdx = tokens.findIndex((t) => wrongAuxForms.includes(t));
+      const anyAuxIdx = foundValidAuxIdx !== -1 ? foundValidAuxIdx : foundWrongAuxIdx;
+
+      // 1. Missing "just"
+      if (!hasJust) {
+        return {
+          isCorrect: false,
+          message: "Chybí ti slovíčko 'just'!",
+        };
+      }
+
+      // 2. Missing auxiliary
+      if (anyAuxIdx === -1) {
+        return {
+          isCorrect: false,
+          message: "Chybí pomocné sloveso have / has (nebo 've / 's).",
+        };
+      }
+
+      // 3. Wrong auxiliary for the subject
+      if (foundWrongAuxIdx !== -1 && foundValidAuxIdx === -1) {
+        return {
+          isCorrect: false,
+          message:
+            "Pozor na osobu! Pro he/she/it (Mia, Dad, brother) patří 'has' (nebo 's), pro I patří 'have' (nebo 've).",
+        };
+      }
+
+      // 4. Wrong position of "just" (must be right after aux and before the verb)
+      const justIdx = tokens.indexOf('just');
+      if (justIdx < anyAuxIdx || justIdx === tokens.length - 1) {
+        return {
+          isCorrect: false,
+          message: "Špatný slovosled! 'just' musí být mezi have/has a 3. tvarem slovesa.",
+        };
+      }
+
+      // 5. Used 2nd form or wrong -ed form
+      const usedWrongVerb = tokens.some((t) => item.wrongForms.includes(t));
+      if (usedWrongVerb) {
+        return {
+          isCorrect: false,
+          message: `Pozor na tvar slovesa! Použil(a) jsi 2. tvar nebo koncovku -ed, ale potřebuješ 3. tvar (past participle): ${item.participle}.`,
+        };
+      }
+
+      // 6. Catch-all for typos or unexpected verb spelling
+      if (!tokens.includes(item.participle)) {
+        return {
+          isCorrect: false,
+          message: `Zkontroluj pravopis 3. tvaru slovesa „${item.baseVerb}“. Správný 3. tvar je: ${item.participle}.`,
+        };
+      }
+
+      return {
+        isCorrect: false,
+        message: "Zkontroluj celý zápis (pomocné sloveso + just + 3. tvar slovesa).",
+      };
+    }
+
+    function renderEx3() {
+      const container = document.getElementById('ex3-container');
+      container.innerHTML = '';
+
+      ex3Data.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60';
+        card.innerHTML = `
+          <div class="space-y-2.5">
+            <!-- Speaker A bubble -->
+            <div class="flex items-start gap-2.5">
+              <span class="shrink-0 w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center mt-0.5">A</span>
+              <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-2.5 text-sm sm:text-base font-medium text-slate-800 shadow-sm">
+                ${item.speakerA}
+              </div>
+            </div>
+
+            <!-- Speaker B bubble with inline input -->
+            <div class="flex items-start gap-2.5">
+              <span class="shrink-0 w-7 h-7 rounded-full bg-teal-100 text-teal-800 font-bold text-xs flex items-center justify-center mt-0.5">B</span>
+              <div class="flex-1 bg-white border border-teal-200/80 rounded-2xl rounded-tl-sm px-4 py-3 text-sm sm:text-base text-slate-800 shadow-sm leading-relaxed">
+                <span>${item.beforeInput}</span>
+                <input
+                  id="ex3-input-${idx}"
+                  type="text"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  placeholder="(${item.baseVerb})"
+                  aria-label="Doplň předpřítomný čas se slovíčkem just pro sloveso ${item.baseVerb}"
+                  class="mx-1.5 my-1 px-3 py-1.5 w-48 sm:w-56 max-w-full rounded-xl border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 focus:outline-none text-base font-semibold text-indigo-900 bg-indigo-50/40 transition"
+                />
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md mr-1">(${item.baseVerb})</span>
+                <span>${item.afterInput}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Per-item feedback -->
+          <div id="ex3-fb-${idx}" class="hidden mt-3 p-3 rounded-xl text-xs sm:text-sm animate-fade-in"></div>
+        `;
+        container.appendChild(card);
+
+        // Allow pressing Enter inside any input to trigger check
+        const inputEl = card.querySelector(`#ex3-input-${idx}`);
+        inputEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            checkEx3();
+          }
+        });
+      });
+    }
+
+    function checkEx3() {
+      let correctCount = 0;
+
+      ex3Data.forEach((item, idx) => {
+        const inputEl = document.getElementById(`ex3-input-${idx}`);
+        const fbEl = document.getElementById(`ex3-fb-${idx}`);
+        const result = diagnoseEx3Answer(inputEl.value, item);
+
+        fbEl.classList.remove('hidden');
+
+        if (result.isCorrect) {
+          correctCount++;
+          inputEl.classList.remove('border-indigo-200', 'border-rose-400', 'bg-rose-50/60', 'bg-indigo-50/40');
+          inputEl.classList.add('border-emerald-500', 'bg-emerald-50');
+          fbEl.className = 'mt-3 p-3 rounded-xl bg-emerald-100/80 text-emerald-900 text-xs sm:text-sm font-semibold animate-fade-in';
+          fbEl.innerHTML = `✅ ${result.message}`;
+        } else {
+          inputEl.classList.remove('border-indigo-200', 'border-emerald-500', 'bg-emerald-50', 'bg-indigo-50/40');
+          inputEl.classList.add('border-rose-400', 'bg-rose-50/60');
+          fbEl.className = 'mt-3 p-3.5 rounded-xl bg-rose-100/80 text-rose-900 text-xs sm:text-sm animate-fade-in';
+          fbEl.innerHTML = `
+            <p class="font-bold">❌ ${result.message}</p>
+            <p class="mt-1"><strong>Správná odpověď:</strong> ${item.displayCorrect}</p>
+          `;
+        }
+      });
+
+      appState.scores.ex3 = correctCount;
+      appState.completed.ex3 = true;
+      updateGlobalScore();
+    }
+
+    function initEx3() {
+      appState.scores.ex3 = 0;
+      appState.completed.ex3 = false;
+      renderEx3();
+      updateGlobalScore();
+    }
+
+    document.getElementById('ex3-check-btn').addEventListener('click', checkEx3);
+    document.getElementById('ex3-reset-btn').addEventListener('click', initEx3);
+
+    /* =====================================================================
+       EXERCISE 4: GRAMATICKÝ DETEKTIV (Spot the Trap – Instant Feedback)
+       ===================================================================== */
+    const ex4Data = [
+      {
+        id: 1,
+        context: 'Why is the baby smiling?',
+        options: [
+          {
+            text: 'She has just woken up.',
+            correct: true,
+            explanation: 'Správně! Pro „She“ patří „has“, následuje „just“ a 3. tvar slovesa wake → woken.',
+          },
+          {
+            text: 'She has just woke up.',
+            correct: false,
+            explanation: 'Past! „woke“ je 2. tvar (minulý čas). V předpřítomném čase potřebuješ 3. tvar: woken.',
+          },
+          {
+            text: 'She just has woken up.',
+            correct: false,
+            explanation: 'Past na slovosled! Slovíčko „just“ nepatří před „has“, ale až ZA něj: She has just woken up.',
+          },
+        ],
+      },
+      {
+        id: 2,
+        context: 'Are you hungry?',
+        options: [
+          {
+            text: "No, I've just ate a sandwich.",
+            correct: false,
+            explanation: 'Past! „ate“ je 2. tvar slovesa eat. Potřebuješ 3. tvar: eaten (eat – ate – eaten).',
+          },
+          {
+            text: 'No, I have eaten just a sandwich.',
+            correct: false,
+            explanation: 'Past na slovosled! „just“ patří MEZI pomocné sloveso „have“ a 3. tvar „eaten“.',
+          },
+          {
+            text: "No, I've just eaten a sandwich.",
+            correct: true,
+            explanation: "Správně! Zkrácený tvar I've + just + 3. tvar eaten je naprosto přesný.",
+          },
+        ],
+      },
+      {
+        id: 3,
+        context: 'Where is Mr. Green?',
+        options: [
+          {
+            text: 'He have just left the building.',
+            correct: false,
+            explanation: 'Past na osobu! Pro 3. osobu jednotného čísla (He) musíš použít „has“, nikoliv „have“.',
+          },
+          {
+            text: 'He has just left the building.',
+            correct: true,
+            explanation: 'Správně! He + has + just + 3. tvar left (leave – left – left).',
+          },
+          {
+            text: 'He has just leaved the building.',
+            correct: false,
+            explanation: 'Past! Sloveso „leave“ je nepravidelné, nepřidává se -ed. Správná řada je: leave – left – left.',
+          },
+        ],
+      },
+      {
+        id: 4,
+        context: 'Why is the cat hiding under the sofa?',
+        options: [
+          {
+            text: 'Our dog has just bitten its tail.',
+            correct: true,
+            explanation: 'Správně! Our dog (= it) + has + just + 3. tvar bitten (bite – bit – bitten).',
+          },
+          {
+            text: 'Our dog has just bit its tail.',
+            correct: false,
+            explanation: 'Past! „bit“ je pouze 2. tvar. 3. tvar slovesa bite je „bitten“.',
+          },
+          {
+            text: 'Our dog have just bitten its tail.',
+            correct: false,
+            explanation: 'Past na osobu! „Our dog“ je v jednotném čísle (= it), takže potřebuje pomocné sloveso „has“.',
+          },
+        ],
+      },
+      {
+        id: 5,
+        context: 'Why are you holding a brand new guitar?',
+        options: [
+          {
+            text: "I've just buyed it!",
+            correct: false,
+            explanation: 'Past! Sloveso „buy“ je nepravidelné, koncovka -ed neexistuje. Správně: buy – bought – bought.',
+          },
+          {
+            text: 'I just have bought it!',
+            correct: false,
+            explanation: 'Past na slovosled! Slovíčko „just“ patří MEZI „have“ a „bought“: I have just bought it!',
+          },
+          {
+            text: "I've just bought it!",
+            correct: true,
+            explanation: "Správně! I've + just + 3. tvar bought – bez chybičky.",
+          },
+        ],
+      },
+    ];
+
+    // Stores chosen option index (0, 1, or 2) per question, or null if unanswered
+    let ex4Answers = [];
+
+    function initEx4() {
+      ex4Answers = ex4Data.map(() => null);
+      appState.scores.ex4 = 0;
+      appState.completed.ex4 = false;
+      renderEx4();
+      updateGlobalScore();
+    }
+
+    function renderEx4() {
+      const container = document.getElementById('ex4-container');
+      container.innerHTML = '';
+      const letters = ['A', 'B', 'C'];
+
+      ex4Data.forEach((item, qIdx) => {
+        const chosenIdx = ex4Answers[qIdx];
+        const isAnswered = chosenIdx !== null;
+
+        const card = document.createElement('div');
+        card.className = 'p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/60';
+
+        const header = document.createElement('div');
+        header.className = 'mb-3';
+        header.innerHTML = `
+          <span class="text-xs font-bold text-teal-700 uppercase tracking-wider">Případ ${qIdx + 1}</span>
+          <p class="text-sm sm:text-base font-bold text-slate-900 mt-0.5">„${item.context}“</p>
+        `;
+        card.appendChild(header);
+
+        const optionsWrap = document.createElement('div');
+        optionsWrap.className = 'space-y-2';
+
+        item.options.forEach((opt, oIdx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.disabled = isAnswered;
+
+          let btnStyle =
+            'w-full text-left p-3.5 rounded-xl border-2 transition flex items-center gap-3 text-sm sm:text-base font-medium ';
+          let letterBadgeStyle =
+            'shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ';
+
+          if (!isAnswered) {
+            btnStyle += 'bg-white border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/50 text-slate-800 cursor-pointer active:scale-[0.99]';
+            letterBadgeStyle += 'bg-slate-100 text-slate-700';
+          } else if (oIdx === chosenIdx && opt.correct) {
+            btnStyle += 'bg-emerald-50 border-emerald-500 text-emerald-950 font-semibold';
+            letterBadgeStyle += 'bg-emerald-600 text-white';
+          } else if (oIdx === chosenIdx && !opt.correct) {
+            btnStyle += 'bg-rose-50 border-rose-500 text-rose-950 font-semibold';
+            letterBadgeStyle += 'bg-rose-600 text-white';
+          } else if (opt.correct) {
+            // Highlight the real correct answer softly if user picked a trap
+            btnStyle += 'bg-emerald-50/60 border-emerald-300 text-emerald-900';
+            letterBadgeStyle += 'bg-emerald-500 text-white';
+          } else {
+            btnStyle += 'bg-white/60 border-slate-200 text-slate-400';
+            letterBadgeStyle += 'bg-slate-100 text-slate-400';
+          }
+
+          btn.className = btnStyle;
+          btn.innerHTML = `
+            <span class="${letterBadgeStyle}">${letters[oIdx]}</span>
+            <span class="flex-1">${opt.text}</span>
+            ${
+              isAnswered && opt.correct
+                ? '<span class="text-emerald-600 font-bold text-sm">✓</span>'
+                : isAnswered && oIdx === chosenIdx && !opt.correct
+                ? '<span class="text-rose-600 font-bold text-sm">✕</span>'
+                : ''
+            }
+          `;
+
+          btn.addEventListener('click', () => {
+            if (ex4Answers[qIdx] !== null) return;
+            ex4Answers[qIdx] = oIdx;
+
+            // Recalculate ex4 score & completion
+            let score = 0;
+            let answeredCount = 0;
+            ex4Answers.forEach((ans, idx) => {
+              if (ans !== null) {
+                answeredCount++;
+                if (ex4Data[idx].options[ans].correct) score++;
+              }
+            });
+
+            appState.scores.ex4 = score;
+            appState.completed.ex4 = answeredCount === ex4Data.length;
+            renderEx4();
+            updateGlobalScore();
+          });
+
+          optionsWrap.appendChild(btn);
+        });
+
+        card.appendChild(optionsWrap);
+
+        // Instant explanation box once answered
+        if (isAnswered) {
+          const chosenOpt = item.options[chosenIdx];
+          const correctOpt = item.options.find((o) => o.correct);
+          const fb = document.createElement('div');
+          fb.className = chosenOpt.correct
+            ? 'mt-3 p-3.5 rounded-xl bg-emerald-100/80 text-emerald-900 text-xs sm:text-sm font-medium animate-fade-in'
+            : 'mt-3 p-3.5 rounded-xl bg-rose-100/80 text-rose-900 text-xs sm:text-sm animate-fade-in';
+
+          fb.innerHTML = chosenOpt.correct
+            ? `<strong>✅ Skvělý postřeh!</strong> ${chosenOpt.explanation}`
+            : `
+              <p><strong>❌ Chytil(a) ses do pasti!</strong> ${chosenOpt.explanation}</p>
+              <p class="mt-1 text-emerald-900"><strong>Správná věta:</strong> ${correctOpt.text}</p>
+            `;
+          card.appendChild(fb);
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById('ex4-reset-btn').addEventListener('click', initEx4);
+
+    /* =====================================================================
+       GLOBAL RESET & INITIALIZATION
+       ===================================================================== */
+    document.getElementById('reset-all-btn').addEventListener('click', () => {
+      initEx1();
+      initEx2();
+      initEx3();
+      initEx4();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Boot up all exercises on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initEx1();
+      initEx2();
+      initEx3();
+      initEx4();
+    });
+  </script>
+</body>
+</html>
