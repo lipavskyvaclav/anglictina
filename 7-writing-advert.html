@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inzerát – pracovní list</title>
+<style>
+:root{--bg:#f6f4ee;--fg:#1d2433;--card:#fff;--line:#d6d0c2;--ac:#1f6f78;--ac2:#f2b84b;--ok:#1d7a46;--okbg:#e0f2e6;--bad:#b3261e;--badbg:#fbe4e1;--warn:#7a5200;--warnbg:#fff0cc;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141a24;--fg:#e8eaf0;--card:#1e2634;--line:#374257;--ac:#58b8c2;--ac2:#e0a93a;--ok:#6fd195;--okbg:#17382a;--bad:#ff8a80;--badbg:#412220;--warn:#f3c969;--warnbg:#41350f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141a24;--fg:#e8eaf0;--card:#1e2634;--line:#374257;--ac:#58b8c2;--ac2:#e0a93a;--ok:#6fd195;--okbg:#17382a;--bad:#ff8a80;--badbg:#412220;--warn:#f3c969;--warnbg:#41350f;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--fg);background:var(--bg);color:var(--fg);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px 14px 40px}
+h1{font-size:1.7rem;margin:.2em 0 .1em}
+h2{font-size:1.2rem;margin:0 0 .3em}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:16px 0}
+.how{color:var(--fg);opacity:.8;margin:.2em 0 .8em;font-size:.95rem}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chip,.gap,.obj{font:inherit;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:8px;min-height:44px;padding:6px 10px;cursor:pointer;text-align:center}
+.chip{width:100%;margin-bottom:6px}
+.chip.sel,.obj.sel{border-color:var(--ac);background:var(--ac);color:#fff}
+:root[data-theme="dark"] .chip.sel,:root[data-theme="dark"] .obj.sel{color:#10151d}
+.chip.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.chip:disabled{cursor:default}
+.msg{margin:8px 0 0;padding:8px 10px;border-radius:8px;font-size:.95rem;display:none}
+.msg.on{display:block}
+.msg.bad{background:var(--badbg);color:var(--bad)}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.warn{background:var(--warnbg);color:var(--warn)}
+.score{font-weight:600;color:var(--ac)}
+.row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.row .chip,.row .obj{width:auto;margin:0}
+.idea{border-left:4px solid var(--ac2);padding:2px 0 2px 10px;margin:10px 0}
+.idea b{display:block}
+.idea small,.cz{opacity:.7}
+details{margin-top:10px}
+summary{cursor:pointer;color:var(--ac);font-weight:600}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px 12px;margin-top:8px;font-size:.92rem}
+.ad{border:2px solid var(--line);border-radius:8px;padding:10px 12px;margin:10px 0}
+.ad h3{margin:0 0 6px;font-size:1.05rem;color:var(--ac)}
+.ad p{margin:4px 0}
+.gap{display:inline-block;min-width:92px;min-height:34px;padding:1px 8px;border-style:dashed}
+.gap.ok{border-style:solid;border-color:var(--ok);background:var(--okbg);color:var(--ok);cursor:default}
+.line{margin:10px 0}
+.inp{font:inherit;color:var(--fg);background:var(--bg);border:2px solid var(--line);border-radius:6px;padding:4px 8px;min-height:40px;width:9.5em;max-width:100%}
+.inp.ok{border-color:var(--ok)}.inp.bad{border-color:var(--bad)}.inp.warn{border-color:var(--ac2)}
+.inp:focus-visible,button:focus-visible{outline:3px solid var(--ac2);outline-offset:2px}
+.go{font:inherit;font-weight:600;background:var(--ac);color:#fff;border:0;border-radius:8px;padding:10px 18px;min-height:46px;cursor:pointer}
+:root[data-theme="dark"] .go{color:#10151d}
+.chk{list-style:none;padding:0;margin:8px 0}
+.chk li::before{content:"☐ "}.chk li.y::before{content:"✅ "}
+pre{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:10px;font:inherit}
+@media(max-width:420px){.inp{width:7.5em}}
+</style>
+</head>
+<body>
+<main>
+<h1>Inzerát – pracovní list</h1>
+<p class="how">Pracuj po cvičeních od 1 do 4. U každé chyby se ukáže vysvětlení – přečti si ho a oprav se.</p>
+
+<section id="s1"><h2>1. Najdi opak</h2>
+<p class="how">Klepni na slovo vlevo a pak na jeho opak vpravo. Například: hotter × colder. <span class="score" id="sc1">0 / 12</span></p>
+<div class="cols"><div id="l1"></div><div id="r1"></div></div>
+<div class="msg" id="m1"></div></section>
+
+<section id="s2"><h2>2. Nápadník: co všechno umíš říct?</h2>
+<p class="how">Vyber věc. Ukážu ti nápady, jak ji popsat. Pak se bude hodit ve cvičení 4.</p>
+<div class="row" id="objs"></div>
+<div id="ideas"></div>
+<details><summary>Všechna slovíčka s překladem</summary><div class="words" id="words"></div></details></section>
+
+<section id="s3"><h2>3. Doplň slovíčka do inzerátu</h2>
+<p class="how">Klepni na slovo dole a pak na prázdné místo v inzerátu. Pozor, některá slova jsou navíc.</p>
+<div id="ad0"></div><div id="ad1"></div></section>
+
+<section id="s4"><h2>4. Napiš vlastní inzerát</h2>
+<p class="how">Vyber věc a piš podle kostry. Piš malými písmeny, velká písmena nejsou důležitá. Potom klepni na Zkontrolovat.</p>
+<div class="row" id="objs4"></div>
+<h3 id="title4" style="margin:.6em 0">phone for sale!</h3>
+<div id="form"></div>
+<button class="go" id="check">Zkontrolovat</button>
+<ul class="chk" id="chk"></ul>
+<div id="final"></div></section>
+</main>
+<script>
+const $=(s,e=document)=>e.querySelector(s),$$=(s,e=document)=>[...e.querySelectorAll(s)];
+const h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
+const norm=s=>s.toLowerCase().replace(/[’`]/g,"'").replace(/\s+/g," ").trim();
+function lev(a,b){const d=[];for(let i=0;i<=a.length;i++){d[i]=[i];}for(let j=1;j<=b.length;j++)d[0][j]=j;for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return d[a.length][b.length]}
+function near(v,list){let b=null,m=9;for(const x of list){const k=lev(v,x);if(k<m){m=k;b=x}}return b&&m>0&&m<=(v.length>5?2:1)?b:null}
+const say=(el,t,c)=>{el.className="msg on "+c;el.textContent=t};
+
+/* data */
+const C={};"cheap:cheaper,expensive:more expensive,easy:easier,difficult:more difficult,fast:faster,slow:slower,heavy:heavier,light:lighter,beautiful:more beautiful,ugly:uglier,clean:cleaner,dirty:dirtier,empty:emptier,crowded:more crowded,hot:hotter,cold:colder,interesting:more interesting,boring:more boring,modern:more modern,old:older,quiet:quieter,noisy:noisier,safe:safer,dangerous:more dangerous,good:better,small:smaller,big:bigger".split(",").map(s=>s.split(":")).forEach(([a,b])=>C[a]=b);
+const K=Object.keys(C),BASES=K,COMPS=K.map(k=>C[k]);
+const CZ="levnější,dražší,snazší,obtížnější,rychlejší,pomalejší,těžší,lehčí,krásnější,ošklivější,čistší,špinavější,prázdnější,přeplněnější,teplejší,studenější,zajímavější,nudnější,modernější,starší,tišší,hlučnější,bezpečnější,nebezpečnější".split(",");
+const P=[...Array(12).keys()].map(i=>({a:C[K[2*i]],az:CZ[2*i],b:C[K[2*i+1]],bz:CZ[2*i+1]}));
+const rule=b=>C[b].startsWith("more")?"Dlouhé slovo: more + slovo.":"Krátké slovo: +er (hot → hotter, heavy → heavier, safe → safer).";
+
+/* 1: opposites */
+(()=>{let sel=null,done=0;const tries={};const m=$("#m1");
+const L=shuf(P.map((_,i)=>i)),R=shuf(P.map((_,i)=>i));
+L.forEach(i=>{const b=h("button","chip",P[i].a);b.dataset.l=i;b.onclick=()=>{if(b.disabled)return;$$("#l1 .chip").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sel=i;m.className="msg"};$("#l1").append(b)});
+R.forEach(j=>{const b=h("button","chip",P[j].b);b.dataset.r=j;b.onclick=()=>{if(b.disabled)return;
+if(sel===null){say(m,"Nejdřív klepni na slovo vlevo.","warn");return}
+if(sel===j){const lb=$(`[data-l="${j}"]`);[lb,b].forEach(x=>{x.disabled=true;x.className="chip ok"});sel=null;done++;$("#sc1").textContent=done+" / 12";
+say(m,`✅ ${P[j].a} (${P[j].az}) × ${P[j].b} (${P[j].bz}). Správně!`+(done==12?" Máš všech 12 dvojic.":""),"ok")}
+else{tries[sel]=(tries[sel]||0)+1;const p=P[sel];
+say(m,`❌ „${p.a}“ znamená ${p.az} a „${P[j].b}“ znamená ${P[j].bz}. To nejsou opaky. Hledej slovo s významem opačným k „${p.az}“.`+(tries[sel]>1?` Nápověda: začíná na „${p.b[0]}“.`:""),"bad")}};$("#r1").append(b)});})();
+
+/* 2: ideas */
+const O={phone:{p:"phones",cz:"telefon",can:[["call a friend","zavolat kamarádovi"],["send messages","posílat zprávy"],["take photos","fotit"],["play games","hrát hry"]],no:[["wash it","mýt ho"],["use it in water","používat ho ve vodě"]],got:["camera","screen","charger"],adj:["light","modern","expensive"]},
+tablet:{p:"tablets",cz:"tablet",can:[["read books","číst knihy"],["draw pictures","kreslit"],["watch videos","sledovat videa"],["add numbers","sčítat čísla"]],no:[["put it in your pocket","dát ho do kapsy"],["cook with it","vařit s ním"]],got:["screen","camera"],adj:["light","modern","fast"]},
+bike:{p:"bikes",cz:"kolo",can:[["ride to school","jet do školy"],["ride in the park","jezdit v parku"],["carry a bag","vézt tašku"],["ride with friends","jezdit s kamarády"]],no:[["ride it in the snow","jezdit na něm ve sněhu"],["fly with it","létat na něm"]],got:["basket","bell"],adj:["fast","safe","cheap"]},
+bag:{p:"bags",cz:"batoh / taška",can:[["carry books","nosit knihy"],["carry your lunch","nosit svačinu"],["put your laptop in it","dát do ní notebook"]],no:[["carry a big TV","unést velkou televizi"],["put a car in it","dát do ní auto"]],got:["pocket","zip"],adj:["light","heavy","beautiful"]},
+laptop:{p:"laptops",cz:"notebook",can:[["add numbers","sčítat čísla"],["send e-mails","posílat e-maily"],["play games","hrát hry"],["watch videos","sledovat videa"]],no:[["put it in your pocket","dát ho do kapsy"],["wash it","mýt ho"]],got:["keyboard","screen","touchpad","camera","charger"],adj:["light","fast","modern"]},
+speaker:{p:"speakers",cz:"reproduktor",can:[["play music","přehrávat hudbu"],["connect it to your phone","připojit ho k telefonu"],["dance to the music","tančit na hudbu"]],no:[["use it in water","používat ho ve vodě"],["repair it","opravit ho (sám se neopraví)"]],got:["charger"],adj:["small","noisy","cheap"]}};
+const AB="add:sčítat,call a friend:zavolat kamarádovi,carry:nosit,catch:chytit,clean:uklízet,climb:lézt,cook:vařit,dance:tancovat,fly:létat,jump:skákat,play a musical instrument:hrát na hud. nástroj,play football:hrát fotbal,repair:opravit,run:běhat,send:poslat,sing:zpívat,speak:mluvit,spell:hláskovat,talk:povídat si,tell stories:vyprávět příběhy,walk:chodit,wash:mýt,camera:fotoaparát,charger:nabíječka,keyboard:klávesnice,laptop:notebook,screen:obrazovka,speaker:reproduktor,tablet:tablet,touchpad:touchpad";
+AB.split(",").forEach(s=>{const[a,b]=s.split(":");const d=h("div");d.append(h("b",0,a),h("span","cz"," – "+b));$("#words").append(d)});
+function ideas(k){const o=O[k],box=$("#ideas");box.textContent="";
+const blk=(t,lines)=>{const d=h("div","idea");d.append(h("b",0,t));lines.forEach(([en,cz])=>{const p=h("div");p.append(document.createTextNode(en));if(cz)p.append(h("small",0,"  ("+cz+")"));d.append(p)});box.append(d)};
+const a=o.adj;
+blk("Co to je",[[`It’s a ${k}.`,o.cz]]);
+blk("Jaká ta věc je",[[`It’s ${a[0]} and ${a[1]}.`],[`It’s ${C[a[2]]} than other ${o.p}.`]]);
+blk("Co s tím jde",o.can.map(([e,c])=>[`You can ${e}.`,c]));
+blk("Co s tím nejde",o.no.map(([e,c])=>[`You can’t ${e}.`,c]));
+blk("Co to má",o.got.map(g=>[`It’s got a ${g}.`]));}
+const ob2=Object.keys(O);
+ob2.forEach(k=>{const b=h("button","obj",k);b.onclick=()=>{$$("#objs .obj").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");ideas(k)};$("#objs").append(b)});
+$("#objs .obj").click();
+
+/* 3: ads */
+const ADS=[{t:"Portable charger for sale!",x:["carries","washing","more cheap"],l:[
+"It’s a [[charger|Co to je? Doplň název věci (nabíječka).]].",
+"It’s small and [[light|Tady patří přídavné jméno v základním tvaru, význam „lehký“.]].",
+"It’s [[cheaper|Za slovem than je vždy 2. stupeň, tedy cheap → cheaper (krátké slovo + er). Slovo more tu nepatří.]] than other chargers.",
+"You can [[carry|Po can je sloveso v základním tvaru bez -s a bez -ing. Význam „nosit“.]] it in your pocket.",
+"You can’t [[wash|Po can’t je sloveso v základním tvaru bez -ing. Význam „mýt“.]] it."]},
+{t:"Sony PlayStation 5 games console for sale!",x:["plays","more fast","controller"],l:[
+"It’s a games [[console|Co to je? Doplň podstatné jméno (herní konzole).]].",
+"It’s modern and [[fast|Tady patří přídavné jméno v základním tvaru, význam „rychlý“. Před and a za It’s nejde 2. stupeň.]].",
+"It’s [[faster|Za slovem than je vždy 2. stupeň. Krátké slovo + er: fast → faster. Slovo more se u krátkých slov nepoužívá.]] than PlayStation 4.",
+"You can [[play|Po can je sloveso v základním tvaru bez -s. Význam „hrát“.]] games with friends.",
+"You can’t put it in your [[pocket|Chybí podstatné jméno, význam „kapsa“.]].",
+"It’s got two [[controllers|Po two je množné číslo, tedy s koncovkou -s. Význam „ovladače“.]]."]}];
+ADS.forEach((ad,n)=>{const box=$("#ad"+n),card=h("div","ad"),m=h("div","msg");let cur=null,left=0;const fails=new Map();
+card.append(h("h3",0,ad.t));const bank=h("div","row");
+const ans=[];
+ad.l.forEach(line=>{const p=h("p"),parts=line.split(/\[\[(.+?)\|(.+?)\]\]/);
+for(let i=0;i<parts.length;i+=3){p.append(document.createTextNode(parts[i]));if(i+1<parts.length){const a=parts[i+1],e=parts[i+2];ans.push(a);left++;
+const g=h("button","gap","＿＿＿");g.onclick=()=>{if(g.classList.contains("ok"))return;
+if(!cur){say(m,"Nejdřív klepni na slovo dole.","warn");return}
+if(cur.dataset.w===a){g.textContent=a;g.className="gap ok";cur.style.display="none";cur.classList.remove("sel");cur=null;left--;
+say(m,left?`✅ „${a}“ sedí. Zbývá ${left}.`:"✅ Hotovo, celý inzerát je správně.","ok")}
+else{const k=(fails.get(g)||0)+1;fails.set(g,k);say(m,`❌ „${cur.dataset.w}“ sem nepatří. ${e}`+(k>1?` Nápověda: začíná na „${a[0]}“.`:""),"bad")}};
+p.append(g)}}card.append(p)});
+shuf([...ans,...ad.x]).forEach(w=>{const c=h("button","chip",w);c.style.width="auto";c.dataset.w=w;c.onclick=()=>{$$(".chip",bank).forEach(x=>x.classList.remove("sel"));c.classList.add("sel");cur=c};bank.append(c)});
+card.append(bank,m);box.append(card)});
+
+/* 4: own advert */
+let obj="phone";
+const OBJ4=["phone","tablet","bike","bag"];
+OBJ4.forEach(k=>{const b=h("button","obj",k);b.onclick=()=>{obj=k;$$("#objs4 .obj").forEach(x=>x.classList.toggle("sel",x===b));$("#title4").textContent=k+" for sale!"};$("#objs4").append(b)});
+$("#objs4 .obj").click();
+const KV=new Set("add call carry catch clean climb cook dance fly jump play repair run send sing speak spell talk tell walk wash take watch listen read draw ride use put connect do write make buy see".split(" "));
+const COL="black white red blue green yellow grey gray pink orange brown purple silver gold".split(" ");
+const NUM={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12};
+const E=(s,m)=>[s,m],OK=["ok",""];
+const unk=v=>["warn",`Slovo „${v}“ neznám, nemohu ho ověřit. Zkontroluj pravopis nebo použij slovo z nápadníku.`];
+const adj=v=>{if(!v)return E("empty","Doplň přídavné jméno.");if(BASES.includes(v))return OK;
+const b=K.find(k=>C[k]==v);if(b)return E("bad",`„${v}“ je 2. stupeň. Do této věty patří základní tvar: ${b}. Druhý stupeň se používá až se slovem than.`);
+const n=near(v,BASES);return n?E("bad",`Pravopis: asi myslíš „${n}“.`):unk(v)};
+const comp=v=>{if(!v)return E("empty","Doplň 2. stupeň přídavného jména.");if(COMPS.includes(v))return OK;
+const b=K.find(k=>k==v);if(b)return E("bad",`Chybí stupňování (než = than). ${b} → ${C[b]}.`);
+const c=K.find(k=>v.replace(/^more /,"").startsWith(k.slice(0,Math.max(3,k.length-2))));
+if(c)return E("bad",`Správný 2. stupeň je „${C[c]}“. ${rule(c)}`);
+const n=near(v,COMPS);return n?E("bad",`Pravopis: asi myslíš „${n}“.`):unk(v)};
+const vp=(v,neg)=>{if(!v)return E("empty","Doplň sloveso.");const w=v.split(" ")[0];
+if(neg&&/^(can't|cant|can)$/.test(w))return E("bad","„You can’t“ už je napsáno. Napiš jen sloveso, např. wash it.");
+if(w=="can"||w=="to")return E("bad",`Slovo „${w}“ nepiš, po can následuje rovnou sloveso.`);
+if(KV.has(w))return OK;
+const c=[w.replace(/ing$/,""),w.replace(/ing$/,"e"),w.replace(/es$/,""),w.replace(/s$/,""),w.replace(/ies$/,"y")].find(x=>x!=w&&KV.has(x));
+if(c)return E("bad",`Po can a can’t je sloveso v základním tvaru, bez -s a bez -ing: ${c}, ne „${w}“.`);
+const n=near(w,[...KV]);return n?E("bad",`Pravopis: asi myslíš „${n}“.`):unk(w)};
+const CK={
+fa:v=>{if(!v)return E("empty","Doplň, co to je.");if(v==obj)return OK;if(OBJ4.includes(v))return E("bad",`Inzerát je o věci „${obj}“, ne o „${v}“.`);const n=near(v,OBJ4);return E("bad",n?`Pravopis: asi myslíš „${n}“.`:`Tady má být „${obj}“.`)},
+a1:adj,a2:adj,c1:comp,
+c2:v=>{if(!v)return E("empty","Doplň množné číslo.");const p=O[obj].p;if(v==p)return OK;if(v==obj)return E("bad",`Po other je množné číslo: ${p} (s koncovkou -s).`);return E("bad",`Správně je „${p}“ (množné číslo).`)},
+g:v=>{v=v.replace(/^an? /,"");if(!v)return E("empty","Doplň, co to má.");const all=new Set([...Object.values(O).flatMap(o=>o.got),"light","speaker","keyboard"]);
+if(all.has(v))return OK;if(/s$/.test(v)&&all.has(v.slice(0,-1)))return E("bad","Po „a“ je jednotné číslo, bez -s.");const n=near(v,[...all]);return n?E("bad",`Pravopis: asi myslíš „${n}“.`):unk(v)},
+y1:v=>vp(v),y2:v=>vp(v),n:v=>vp(v,1),
+age:v=>{if(!v)return E("empty","Doplň stáří, např. two years.");const m=v.match(/^(\w+) (year|years|month|months)$/);
+if(!m)return E("bad","Napiš číslo i jednotku, např. two years nebo 1 year. Slovo old už je napsáno.");
+const k=/^\d+$/.test(m[1])?+m[1]:NUM[m[1]];if(!k)return unk(m[1]);
+const sg=/[^s]$/.test(m[2]);if(k==1&&!sg)return E("bad",`U čísla 1 je jednotné číslo: 1 ${m[2].slice(0,-1)}.`);if(k>1&&sg)return E("bad",`Od čísla 2 je množné číslo: ${k} ${m[2]}s.`);return OK},
+col:v=>{if(!v)return E("empty","Doplň barvu.");if(COL.includes(v))return OK;const n=near(v,COL);return n?E("bad",`Pravopis: asi myslíš „${n}“.`):unk(v)},
+pr:v=>{if(!v)return E("empty","Doplň cenu.");if(/^\d+$/.test(v))return OK;return E("bad","Napiš jen číslo, znak € už je napsaný.")}};
+const LN=["It’s a {fa}.","It’s {a1} and {a2}.","It’s {c1} than other {c2}.","It’s got a {g}.","You can {y1} and {y2}.","You can’t {n}.","It’s {age} old.","Colour: {col}","You can buy it for €{pr}."];
+LN.forEach(t=>{const d=h("div","line");const ids=[];t.split(/\{(\w+)\}/).forEach((s,i)=>{if(i%2){const inp=h("input","inp");inp.id="f_"+s;inp.autocomplete="off";inp.autocapitalize="off";inp.spellcheck=false;inp.oninput=()=>{inp.className="inp"};ids.push(s);d.append(inp)}else d.append(document.createTextNode(s))});
+const m=h("div","msg");m.id="m_"+ids.join("_");d.dataset.ids=ids.join(",");d.append(m);$("#form").append(d)});
+$("#check").onclick=()=>{const res={};let bad=0,warn=0,okc=0,empty=0;
+$$("#form .line").forEach(d=>{const ids=d.dataset.ids.split(","),m=$(".msg",d),msgs=[];let worst="ok";
+ids.forEach(id=>{const inp=$("#f_"+id),r=CK[id](norm(inp.value));res[id]=r[0];inp.className="inp "+(r[0]=="empty"?"":r[0]);
+if(r[0]=="bad"){bad++;msgs.push("❌ "+r[1]);worst="bad"}else if(r[0]=="warn"){warn++;msgs.push("⚠️ "+r[1]);if(worst!="bad")worst="warn"}else if(r[0]=="empty"){empty++;msgs.push("✏️ "+r[1]);if(worst=="ok")worst="warn"}else okc++});
+if(msgs.length)say(m,msgs.join(" "),worst);else say(m,"✅ Správně.","ok")});
+const g=(...i)=>i.every(x=>res[x]=="ok");
+const items=[["Řekl jsem, co to je.",g("fa")],["Mám 2 přídavná jména.",g("a1","a2")],["Mám větu s than.",g("c1","c2")],["Mám větu s You can.",g("y1","y2")],["Mám větu s You can’t.",g("n")],["Mám stáří, barvu a cenu.",g("age","col","pr")],["Pravopis i tvary slov jsou bez chyby.",!bad&&!warn&&!empty]];
+$("#chk").textContent="";items.forEach(([t,y])=>{const li=h("li",y?"y":"",t);$("#chk").append(li)});
+const f=$("#final");f.textContent="";
+if(!bad&&!warn&&!empty){const v=id=>norm($("#f_"+id).value);const cap=s=>s[0].toUpperCase()+s.slice(1);
+const txt=`${cap(obj)} for sale!\nIt’s a ${v("fa")}.\nIt’s ${v("a1")} and ${v("a2")}.\nIt’s ${v("c1")} than other ${v("c2")}.\nIt’s got a ${v("g").replace(/^an? /,"")}.\nYou can ${v("y1")} and ${v("y2")}.\nYou can’t ${v("n")}.\nIt’s ${v("age")} old.\nColour: ${v("col")}.\nYou can buy it for €${v("pr")}.`;
+f.append(h("div","msg on ok","🎉 Inzerát je správně. Takhle vypadá celý:"),h("pre",0,txt))}
+else if(!bad&&!empty)f.append(h("div","msg on warn","Žádná jistá chyba, ale u slov se ⚠️ si nejsem jistý. Zkontroluj je v pomůcce."))};
+</script>
+</body>
+</html>
